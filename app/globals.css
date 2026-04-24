@@ -96,3 +96,42 @@ body::before {
 .animate-pulse-once {
     animation: pulse 0.4s ease;
 }
+
+/* Responsive: stack welcome grid on small screens */
+@media (max-width: 680px) {
+    .welcome-grid-responsive {
+        grid-template-columns: 1fr !important;
+    }
+}
+
+/* Input focus ring */
+input:focus {
+    outline: none;
+    border-color: var(--verde-claro) !important;
+    box-shadow: 0 0 0 3px rgba(82, 183, 136, 0.15);
+}
+
+/* Leaderboard scrollbar */
+.lb-list-scroll::-webkit-scrollbar {
+    width: 4px;
+}
+.lb-list-scroll::-webkit-scrollbar-track {
+    background: transparent;
+}
+.lb-list-scroll::-webkit-scrollbar-thumb {
+    background: rgba(82, 183, 136, 0.25);
+    border-radius: 2px;
+}
+.lb-list-scroll::-webkit-scrollbar-thumb:hover {
+    background: rgba(82, 183, 136, 0.45);
+}
+
+/* Leaderboard row hover */
+.lb-row-hover:hover {
+    background: rgba(82, 183, 136, 0.04) !important;
+}
+
+/* Diff card hover handled via JS but add cursor */
+.diff-card-btn {
+    cursor: pointer;
+}

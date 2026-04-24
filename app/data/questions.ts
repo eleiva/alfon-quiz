@@ -6,6 +6,8 @@ export type Question = {
   explanation: string;
 };
 
+export type Difficulty = "normal" | "hard";
+
 export const questions: Question[] = [
   {
     // Q1 — correct originally index 1 → placed at index 1
@@ -185,12 +187,7 @@ export const questions: Question[] = [
     category: "Relaciones interespecíficas",
     question:
       "Los guanacos y las ovejas compiten por el pasto en la Patagonia. ¿Qué tipo de relación es esta?",
-    options: [
-      "Mutualismo",
-      "Competencia",
-      "Parasitismo",
-      "Comensalismo",
-    ],
+    options: ["Mutualismo", "Competencia", "Parasitismo", "Comensalismo"],
     correct: 1,
     explanation:
       "Es competencia: dos o más especies disputan un recurso limitado (en este caso, el pasto). Ninguna se beneficia de la otra; ambas pueden verse perjudicadas.",
@@ -215,12 +212,7 @@ export const questions: Question[] = [
     category: "Relaciones interespecíficas",
     question:
       "Los horneros construyen sus nidos en árboles donde viven los tucanes, obteniendo protección sin afectarlos. ¿Qué relación es esta?",
-    options: [
-      "Comensalismo",
-      "Mutualismo",
-      "Depredación",
-      "Parasitismo",
-    ],
+    options: ["Comensalismo", "Mutualismo", "Depredación", "Parasitismo"],
     correct: 0,
     explanation:
       "Es comensalismo: los horneros se benefician (protección) y los tucanes no se ven afectados. Solo una especie obtiene ventaja.",
@@ -309,3 +301,286 @@ export function shuffleArray<T>(arr: T[]): T[] {
   }
   return a;
 }
+
+export const hardQuestions: Question[] = [
+  {
+    category: "Relaciones interespecíficas",
+    question:
+      "Los tordos se alimentan de los parásitos que crecen sobre la piel de los caimanes en los Esteros del Iberá. ¿Qué tipo de relación interespecífica es esta y por qué NO es comensalismo?",
+    options: [
+      "Es parasitismo porque los tordos dañan la piel del caimán",
+      "Es mutualismo porque ambas especies se benefician: el tordo obtiene alimento y el caimán queda libre de parásitos",
+      "Es comensalismo porque solo el tordo se beneficia y el caimán es indiferente",
+      "Es amensalismo porque el tordo elimina parásitos que el caimán necesita",
+    ],
+    correct: 1,
+    explanation:
+      "Es mutualismo. El tordo obtiene alimento (los parásitos) y el caimán se beneficia al liberarse de ellos. En el comensalismo, una especie se beneficia y la otra NO se ve afectada, pero aquí el caimán sí se beneficia activamente.",
+  },
+  {
+    category: "Cadenas y redes alimentarias",
+    question:
+      "En la red alimentaria del libro (pasto ovillo → liebre pampeana → zorro pampeano → puma), si se eliminara completamente la población de zorros pampeanos, ¿cuál sería el efecto más probable a corto plazo?",
+    options: [
+      "El puma desaparecería por falta de alimento y la liebre aumentaría sin control",
+      "La liebre pampeana aumentaría su población y el puma debería cambiar de presa o disminuir",
+      "El pasto ovillo desaparecería por sobreconsumo de liebres y el puma aumentaría",
+      "No habría cambios porque el puma puede alimentarse directamente del pasto",
+    ],
+    correct: 1,
+    explanation:
+      "Sin zorros, la liebre pampeana perdería un depredador y su población crecería (sobrepastorearía el pasto). El puma, que depende del zorro como eslabón intermedio en esa cadena, se vería forzado a buscar presas alternativas o su población decrecería. Esto ilustra cómo la eliminación de un nodo afecta toda la red.",
+  },
+  {
+    category: "Niveles de organización",
+    question:
+      "¿Por qué las hojas caídas de un árbol son un componente BIÓTICO y no abiótico, aunque ya no estén vivas?",
+    options: [
+      "Porque siguen realizando fotosíntesis en el suelo",
+      "Porque provienen de un ser vivo, y la definición de biótico incluye todo lo que es un ser vivo O proviene de ellos",
+      "Porque los descomponedores las convierten en seres vivos nuevamente",
+      "En realidad son abióticas porque ya no tienen vida",
+    ],
+    correct: 1,
+    explanation:
+      "El libro aclara explícitamente que los componentes bióticos corresponden a 'todo lo que es un ser vivo O proviene de ellos', incluyendo los desechos y restos. Las hojas caídas provienen de un ser vivo, por lo tanto son bióticas. Este es un punto de confusión frecuente.",
+  },
+  {
+    category: "Productores",
+    question:
+      "¿Por qué algunas plantas necesitan raíces con características especiales como las estomas para tomar agua, además del proceso de fotosíntesis?",
+    options: [
+      "Para realizar la respiración celular en lugar de la fotosíntesis",
+      "Porque para completar la fotosíntesis necesitan elementos del ambiente que adquieren a través de diferentes estructuras: agua por raíces y CO₂ por estomas",
+      "Porque las estomas reemplazan a las raíces en plantas acuáticas",
+      "Para competir con los consumidores primarios por los mismos nutrientes",
+    ],
+    correct: 1,
+    explanation:
+      "Las plantas necesitan agua (captada por raíces), CO₂ (que ingresa por las estomas) y luz solar para realizar la fotosíntesis. Algunas plantas carnívoras desarrollaron además otras adaptaciones para obtener nitrógeno de insectos cuando el suelo es pobre en ese elemento.",
+  },
+  {
+    category: "Descomponedores",
+    question:
+      "¿Cuál es la diferencia fundamental entre un consumidor carroñero y un descomponedor, si ambos se alimentan de organismos muertos?",
+    options: [
+      "No hay diferencia; son el mismo nivel trófico",
+      "Los carroñeros ingieren trozos visibles de materia orgánica; los descomponedores (hongos, bacterias) degradan la materia a nivel microscópico devolviendo nutrientes al ambiente",
+      "Los carroñeros son siempre más grandes que los descomponedores",
+      "Los descomponedores solo actúan sobre vegetales; los carroñeros, sobre animales",
+    ],
+    correct: 1,
+    explanation:
+      "Los carroñeros consumen restos a nivel macroscópico (comen la carne, huesos, etc.). Los descomponedores como hongos y bacterias actúan a nivel microscópico, desintegrando completamente la materia orgánica y liberando nutrientes simples al suelo, aire y agua, cerrando el ciclo de la materia.",
+  },
+  {
+    category: "Relaciones interespecíficas",
+    question:
+      "El tránsito de automóviles en la estepa patagónica perturba a los choiques. ¿Podría clasificarse esto como amensalismo entre humanos y choiques? ¿Por qué sí o no?",
+    options: [
+      "Sí, porque los humanos perjudican a los choiques sin obtener ningún beneficio directo de perturbarlos",
+      "No, porque el amensalismo solo ocurre entre animales salvajes, no con humanos",
+      "No, porque los humanos sí obtienen un beneficio: el transporte",
+      "Sí, pero solo si los choiques mueren como consecuencia de la perturbación",
+    ],
+    correct: 0,
+    explanation:
+      "El libro clasifica este caso directamente como amensalismo: los automóviles (y por extensión los humanos) perjudican a los choiques al dañar su hábitat, sin que los humanos obtengan ningún beneficio directo de esa perturbación específica. El amensalismo no excluye a los humanos como especie interactuante.",
+  },
+  {
+    category: "Cadenas y redes alimentarias",
+    question:
+      "En la cadena: pasto llorón → ciervo de los pantanos → águila coronada → puma, ¿en qué nivel trófico se ubica el puma y cómo se denomina ese tipo de consumidor?",
+    options: [
+      "Nivel 2 — consumidor primario",
+      "Nivel 3 — consumidor secundario",
+      "Nivel 4 — consumidor terciario",
+      "Nivel 1 — superdepredador productor",
+    ],
+    correct: 2,
+    explanation:
+      "El pasto llorón es nivel 1 (productor). El ciervo es nivel 2 (consumidor primario). El águila es nivel 3 (consumidor secundario). El puma se alimenta del águila, ocupando el nivel 4: consumidor terciario. Es el superdepredador de esta cadena.",
+  },
+  {
+    category: "Relaciones interespecíficas",
+    question:
+      "¿Cuál es la distinción clave entre competencia INTRAESPECÍFICA e INTERespecífica? Identificá cuál de estas situaciones es interespecífica.",
+    options: [
+      "Dos pumas machos pelean por territorio en la misma región — interespecífica",
+      "Guanacos y ovejas compiten por el pasto en la Patagonia — interespecífica",
+      "Dos cardúmenes de anchoas compiten por plancton — interespecífica",
+      "Liebres pampeanas de la misma colonia compiten por pareja — interespecífica",
+    ],
+    correct: 1,
+    explanation:
+      "La competencia INTRAespecífica ocurre entre individuos de la MISMA especie (dos pumas, dos anchoas, dos liebres). La INTERespecífica ocurre entre individuos de DIFERENTES especies. Guanacos y ovejas son especies distintas compitiendo por el mismo recurso (pasto), lo que lo convierte en competencia interespecífica.",
+  },
+  {
+    category: "Productores",
+    question:
+      "¿Qué proceso realizan las plantas para producir glucosa y almidón, y cuáles son sus tres ingredientes esenciales?",
+    options: [
+      "Respiración celular — glucosa, oxígeno y calor",
+      "Fotosíntesis — agua, dióxido de carbono y luz solar",
+      "Fermentación — azúcar, levadura y agua",
+      "Quimiosíntesis — metano, sulfuro y temperatura",
+    ],
+    correct: 1,
+    explanation:
+      "Las plantas realizan la fotosíntesis, usando agua (captada por raíces), CO₂ (que ingresa por estomas) y energía luminosa para sintetizar glucosa y almidón. Este proceso las define como productores y es la base energética de casi todos los ecosistemas.",
+  },
+  {
+    category: "Relaciones interespecíficas",
+    question:
+      "Los cormoranes imperiales usan los árboles de las islas del delta del Paraná para anidar sin afectar a otras aves. Los piojos se alimentan de la sangre de cóndores andinos afectando su salud. ¿Qué tienen en COMÚN estas dos relaciones?",
+    options: [
+      "En ambas, una especie se beneficia y la otra también",
+      "En ambas, una especie usa a otra como recurso o soporte, pero se diferencian en si la otra resulta perjudicada o no",
+      "Ambas son ejemplos de competencia por recursos espaciales",
+      "En ambas, las dos especies resultan perjudicadas",
+    ],
+    correct: 1,
+    explanation:
+      "En ambas relaciones, una especie (el cormorán / el piojo) usa a otra como soporte o recurso. La diferencia es el efecto sobre la segunda especie: en el comensalismo (cormorán-árbol/aves) no hay perjuicio; en el parasitismo (piojo-cóndor) la segunda especie se debilita. El denominador común es la asimetría de la relación.",
+  },
+  {
+    category: "Cadenas y redes alimentarias",
+    question:
+      "Si en la red pampeana tanto la liebre como el ciervo son consumidos por el zorro y el águila, y ambos se alimentan de pasto, ¿cómo se llama la posición que comparten liebre y ciervo en la red?",
+    options: [
+      "Superpredadores del segundo nivel",
+      "Comparten el nivel trófico de consumidores primarios, siendo recursos alternativos para sus depredadores",
+      "Son descomponedores primarios porque ambos comen vegetales",
+      "Son productores secundarios porque transforman el pasto en carne",
+    ],
+    correct: 1,
+    explanation:
+      "Liebre y ciervo ocupan el mismo nivel trófico (consumidores primarios) y funcionan como presas alternativas para sus depredadores. Esto le da resiliencia a la red: si una presa escasea, el depredador puede recurrir a la otra. Es una de las ventajas de las redes sobre las cadenas simples.",
+  },
+  {
+    category: "Niveles de organización",
+    question:
+      "¿Cuál es la diferencia entre 'especie' y 'población' según el glosario del libro?",
+    options: [
+      "La especie es el conjunto de individuos de un área; la población incluye varias especies",
+      "La especie es el conjunto de individuos con características comunes y capaces de tener descendencia fértil; la población es el conjunto de individuos de una especie en un área geográfica determinada",
+      "Son sinónimos en ecología moderna",
+      "La población es más grande que la especie porque incluye individuos de diferentes regiones del planeta",
+    ],
+    correct: 1,
+    explanation:
+      "Según el glosario, especie es el conjunto de individuos con características comunes capaces de reproducirse entre sí con descendencia fértil. Población es el subconjunto de individuos de esa especie que comparten una misma área geográfica y pueden reproducirse entre ellos.",
+  },
+  {
+    category: "Relaciones interespecíficas",
+    question:
+      "¿Por qué la relación entre las vizcachas y las águilas moras es depredación y NO parasitismo, si en ambos casos una especie se 'alimenta' de otra?",
+    options: [
+      "Porque las vizcachas son más grandes que los parásitos típicos",
+      "Porque en la depredación el depredador mata y consume a la presa; en el parasitismo el parásito vive asociado al huésped sin necesariamente matarlo de inmediato",
+      "Porque el águila vuela y los parásitos no",
+      "Porque la vizcacha también deprede al águila en algún momento",
+    ],
+    correct: 1,
+    explanation:
+      "La distinción clave es que en la depredación el acto culmina con la muerte y consumo de la presa. En el parasitismo, el parásito convive con el huésped durante un tiempo (viviendo dentro o adherido a él) y lo debilita progresivamente sin necesariamente matarlo de inmediato.",
+  },
+  {
+    category: "Ecosistema",
+    question:
+      "El libro dice que 'Eco' significa 'casa, morada o ámbito vital'. ¿Qué implicación conceptual tiene esto para entender qué es un ecosistema?",
+    options: [
+      "Que los ecosistemas solo existen donde hay construcciones humanas",
+      "Que el ecosistema es el 'hogar' integral de los seres vivos: incluye tanto el ambiente físico (abiótico) como todos los organismos (bióticos) que lo habitan e interactúan",
+      "Que los ecosistemas son estáticos e inmutables como una casa",
+      "Que solo los animales que tienen refugio físico pertenecen a un ecosistema",
+    ],
+    correct: 1,
+    explanation:
+      "La etimología refuerza la idea de que el ecosistema no es solo el ambiente físico ni solo los seres vivos, sino la unidad funcional que los integra: el 'hogar' donde ocurren todas las interacciones entre componentes bióticos y abióticos.",
+  },
+  {
+    category: "Consumidores",
+    question:
+      "Un pingüino se alimenta de merluza y anchoíta. ¿En qué nivel trófico se ubica si la merluza es consumidora secundaria y la anchoíta es consumidora primaria?",
+    options: [
+      "Siempre en el nivel 2, porque es un animal marino",
+      "En el nivel 3 cuando come anchoíta y en el nivel 4 cuando come merluza, lo que lo hace un consumidor de nivel variable u omnívoro trófico",
+      "En el nivel 1 porque es un ave y no un mamífero",
+      "En el nivel 5 porque está en la cima de la cadena marina",
+    ],
+    correct: 1,
+    explanation:
+      "El nivel trófico de un consumidor depende de qué está comiendo en cada caso. Si el pingüino come anchoíta (consumidora primaria = nivel 2), él ocupa el nivel 3. Si come merluza (consumidora secundaria = nivel 3), él ocupa el nivel 4. Esto es lo que hace complejas a las redes reales: muchos organismos comen en múltiples niveles.",
+  },
+  {
+    category: "Relaciones interespecíficas",
+    question:
+      "¿Por qué resulta difícil a veces distinguir entre comensalismo y mutualismo en la naturaleza?",
+    options: [
+      "Porque ambas relaciones siempre terminan en depredación",
+      "Porque puede ser difícil determinar si la especie 'no afectada' obtiene algún beneficio sutil o indirecto que no es observable a simple vista",
+      "Porque en la naturaleza todas las relaciones son negativas para alguna especie",
+      "Porque comensalismo y mutualismo son el mismo concepto con distinto nombre",
+    ],
+    correct: 1,
+    explanation:
+      "La línea entre comensalismo (una se beneficia, la otra es neutra) y mutualismo (ambas se benefician) puede ser difusa: un beneficio puede existir pero ser tan sutil que no se detecte fácilmente. Por ejemplo, el árbol que aloja al hornero podría obtener algún beneficio indirecto como la dispersión de semillas, lo que lo haría mutualismo.",
+  },
+  {
+    category: "Cadenas y redes alimentarias",
+    question:
+      "El libro indica que las actividades piden armar redes alimentarias e incluir al menos 4 niveles. ¿Qué elemento NO puede faltar en ninguna red alimentaria válida?",
+    options: [
+      "Al menos un carnívoro en el nivel más alto",
+      "Un productor como punto de partida, ya que toda la energía de la red proviene de organismos que fotosintetizan",
+      "Un descomponedor explícito dentro de la cadena principal",
+      "Exactamente 5 especies, ni más ni menos",
+    ],
+    correct: 1,
+    explanation:
+      "Toda red o cadena alimentaria debe comenzar con un productor (organismo fotosintético), ya que es la única fuente primaria de energía en el sistema. Sin productores no hay base energética y la red no puede sostenerse. Los descomponedores suelen graficarse aparte, y el número de especies varía según el ecosistema.",
+  },
+  {
+    category: "Relaciones interespecíficas",
+    question:
+      "Las sardinas y las anchoas compiten por el plancton en el mar Argentino. Si el plancton aumentara enormemente, ¿qué pasaría con la intensidad de la competencia entre estas especies?",
+    options: [
+      "La competencia aumentaría porque habría más individuos de ambas especies",
+      "La competencia disminuiría porque el recurso limitante ya no sería escaso, reduciendo la presión competitiva",
+      "La competencia se mantendría igual independientemente del plancton disponible",
+      "Una especie exterminaría a la otra para aprovechar el exceso de plancton",
+    ],
+    correct: 1,
+    explanation:
+      "La competencia ocurre por recursos LIMITADOS. Si el plancton abundara, la escasez del recurso desaparecería y la presión competitiva entre sardinas y anchoas disminuiría significativamente. La competencia es más intensa cuando el recurso es escaso.",
+  },
+  {
+    category: "Descomponedores",
+    question:
+      "¿Por qué los descomponedores son imprescindibles para que los productores puedan continuar existiendo, aunque no haya una relación directa entre ellos en la cadena alimentaria?",
+    options: [
+      "Porque los descomponedores producen oxígeno que los productores necesitan para respirar",
+      "Porque los descomponedores liberan nutrientes simples al suelo y al agua que los productores necesitan para crecer y realizar la fotosíntesis",
+      "Porque los descomponedores protegen a los productores de los herbívoros",
+      "Porque los descomponedores compiten con los productores y los estimulan a crecer más rápido",
+    ],
+    correct: 1,
+    explanation:
+      "Los descomponedores cierran el ciclo de la materia: al degradar restos de organismos, liberan nutrientes minerales simples al suelo y al agua. Esos nutrientes son esenciales para que los productores (plantas) puedan crecer y realizar la fotosíntesis. Sin descomponedores, los nutrientes quedarían 'atrapados' en la materia orgánica muerta.",
+  },
+  {
+    category: "Relaciones interespecíficas",
+    question:
+      "Analizando TODAS las relaciones interespecíficas del capítulo (depredación, competencia, mutualismo, comensalismo, parasitismo, amensalismo), ¿cuál es la única en que NINGUNA de las dos especies obtiene beneficio alguno?",
+    options: [
+      "Parasitismo, porque el huésped pierde y el parásito gana poco",
+      "Competencia, porque ambas especies gastan energía sin que ninguna obtenga un beneficio neto directo de la interacción en sí",
+      "Amensalismo, porque una especie es perjudicada y la otra no obtiene beneficio",
+      "Comensalismo, porque la especie neutra no gana nada",
+    ],
+    correct: 2,
+    explanation:
+      "En el amensalismo, una especie es perjudicada y la otra no obtiene NINGÚN beneficio. En la depredación el depredador gana alimento. En el parasitismo el parásito se nutre. En la competencia ambas 'luchan' por un recurso que sí quieren obtener. En el mutualismo y comensalismo hay beneficios. Solo en el amensalismo la interacción es completamente 'gratuita' para la especie perjudicadora: daña a la otra sin sacar nada.",
+  },
+];
