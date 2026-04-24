@@ -2,28 +2,22 @@
 
 import { useState, useCallback, useEffect, useRef } from "react";
 import {
-  questions,
-  hardQuestions,
   shuffleArray,
   type Question,
   type Difficulty,
 } from "@/app/data/questions";
+import { quizzes, getQuizById } from "@/app/data/quizzes";
 import { useSound } from "@/app/hooks/useSound";
+import QuizCatalog from "@/app/components/QuizCatalog";
+import { type LeaderboardEntry } from "@/app/components/QuizCatalog";
+import PersonalityTest from "@/app/components/PersonalityTest";
+import { shareResultWhatsApp } from "@/app/components/PersonalityTest";
 
-type Phase = "welcome" | "difficulty" | "game" | "results";
+export type { LeaderboardEntry };
+
+type Phase = "welcome" | "catalog" | "game" | "results" | "personality";
 
 const LETTERS = ["A", "B", "C", "D"];
-
-type LeaderboardEntry = {
-  id: string;
-  name: string;
-  emoji: string;
-  score: number;
-  total: number;
-  difficulty: Difficulty;
-  pct: number;
-  created_at: string;
-};
 
 const EMOJI_OPTIONS = [
   "🦁",
@@ -54,6 +48,7 @@ export default function TriviaGame() {
   const [playerEmoji, setPlayerEmoji] = useState("🌱");
   const [nameError, setNameError] = useState("");
   const [difficulty, setDifficulty] = useState<Difficulty>("normal");
+  const [selectedQuizId, setSelectedQuizId] = useState<string>("ecosistemas");
   const [deck, setDeck] = useState<Question[]>([]);
   const [current, setCurrent] = useState(0);
   const [score, setScore] = useState(0);
@@ -97,12 +92,16 @@ export default function TriviaGame() {
       return;
     }
     setNameError("");
-    setPhase("difficulty");
+    setPhase("catalog");
   }, [playerName]);
 
-  const startGame = useCallback((diff: Difficulty) => {
+  const startGame = useCallback((quizId: string, diff: Difficulty) => {
+    const quiz = getQuizById(quizId);
+    if (!quiz) return;
+    setSelectedQuizId(quizId);
     setDifficulty(diff);
-    setDeck(shuffleArray(diff === "hard" ? hardQuestions : questions));
+    const pool = diff === "hard" ? quiz.hard : quiz.normal;
+    setDeck(shuffleArray(pool.length > 0 ? pool : quiz.normal));
     setCurrent(0);
     setScore(0);
     setWrong(0);
@@ -158,6 +157,7 @@ export default function TriviaGame() {
         total,
         difficulty,
         pct,
+        quiz_id: selectedQuizId,
       }),
     })
       .then((res) => {
@@ -166,7 +166,6 @@ export default function TriviaGame() {
       })
       .then((saved) => {
         setSavedEntry(saved);
-        // Prepend to local list immediately, re-sort by pct desc
         setLeaderboard((prev) =>
           [saved, ...prev]
             .sort((a, b) => b.pct - a.pct || b.score - a.score)
@@ -357,13 +356,13 @@ export default function TriviaGame() {
     return (
       <div className="trivia-container">
         <header className="trivia-header">
-          <div className="trivia-badge">🌿 Ciencias Naturales</div>
+          <div className="trivia-badge">🎮 Trivias</div>
           <h1 className="trivia-h1">
-            Trivia de{" "}
-            <span style={{ color: "var(--verde-claro)" }}>Ecosistemas</span>
+            Trivia{" "}
+            <span style={{ color: "var(--verde-claro)" }}>Educativa</span>
           </h1>
           <p style={{ color: "var(--gris)", fontSize: 14, fontWeight: 300 }}>
-            20 preguntas · Normal o Difícil
+            Varios temas · Normal o Difícil
           </p>
         </header>
 
@@ -371,7 +370,7 @@ export default function TriviaGame() {
           className="welcome-grid-responsive"
           style={{ display: "grid", gap: 16, alignItems: "start" }}
         >
-          {/* ── LEFT: form + topics ── */}
+          {/* ── LEFT: form ── */}
           <div style={{ display: "flex", flexDirection: "column", gap: 0 }}>
             <div className="welcome-card">
               <div className="card-top-bar" />
@@ -469,35 +468,6 @@ export default function TriviaGame() {
                 Continuar →
               </button>
             </div>
-
-            {/* Topics chips */}
-            <div
-              style={{
-                marginTop: 14,
-                display: "flex",
-                flexWrap: "wrap",
-                gap: 6,
-              }}
-            >
-              {[
-                "Productores",
-                "Consumidores",
-                "Descomponedores",
-                "Cadenas alimentarias",
-                "Redes tróficas",
-                "Depredación",
-                "Competencia",
-                "Mutualismo",
-                "Comensalismo",
-                "Parasitismo",
-                "Amensalismo",
-                "Niveles de organización",
-              ].map((t) => (
-                <span key={t} className="topic-chip">
-                  {t}
-                </span>
-              ))}
-            </div>
           </div>
 
           {/* ── RIGHT: leaderboard ── */}
@@ -570,94 +540,33 @@ export default function TriviaGame() {
     );
   }
 
-  /* ── DIFFICULTY SELECTION ────────────────────────────────── */
-  if (phase === "difficulty") {
+  /* ── CATALOG ─────────────────────────────────────────────── */
+  if (phase === "catalog") {
     return (
-      <div className="trivia-container">
-        <header className="trivia-header">
-          <div className="trivia-badge">🌿 Ciencias Naturales</div>
-          <h1 className="trivia-h1">
-            {playerEmoji}{" "}
-            <span style={{ color: "var(--verde-claro)" }}>
-              {playerName.trim() || "Jugador"}
-            </span>
-            , ¿qué nivel?
-          </h1>
-          <p style={{ color: "var(--gris)", fontSize: 14, fontWeight: 300 }}>
-            Elegí la dificultad para empezar
-          </p>
-        </header>
+      <QuizCatalog
+        playerName={playerName}
+        playerEmoji={playerEmoji}
+        quizzes={quizzes}
+        leaderboard={leaderboard}
+        lbLoading={lbLoading}
+        lbFilter={lbFilter}
+        onFilterChange={setLbFilter}
+        onRefreshLb={fetchLeaderboard}
+        onSelectQuiz={(quizId, diff) => startGame(quizId, diff)}
+        onChangeName={() => setPhase("welcome")}
+        onStartPersonalityTest={() => setPhase("personality")}
+      />
+    );
+  }
 
-        <div className="diff-grid">
-          {/* Normal card */}
-          <button
-            className="diff-card diff-card-normal"
-            onClick={() => startGame("normal")}
-          >
-            <span className="diff-emoji">🌱</span>
-            <span
-              className="diff-label"
-              style={{ color: "var(--verde-claro)" }}
-            >
-              Normal
-            </span>
-            <span
-              className="diff-pill"
-              style={{
-                background: "rgba(82,183,136,0.1)",
-                color: "var(--verde-claro)",
-                border: "1px solid rgba(82,183,136,0.2)",
-              }}
-            >
-              Intermedio
-            </span>
-            <p className="diff-desc">
-              20 preguntas de comprensión y reconocimiento de conceptos clave
-              sobre ecosistemas y relaciones biológicas.
-            </p>
-            <div className="diff-meta">
-              <span className="diff-meta-item">📋 20 preguntas</span>
-              <span className="diff-meta-item">⏱ ~10 min</span>
-            </div>
-          </button>
-
-          {/* Hard card */}
-          <button
-            className="diff-card diff-card-hard"
-            style={{ borderColor: "rgba(244,197,66,0.25)" }}
-            onClick={() => startGame("hard")}
-          >
-            <span className="diff-emoji">🔥</span>
-            <span className="diff-label" style={{ color: "var(--dorado)" }}>
-              Difícil
-            </span>
-            <span
-              className="diff-pill"
-              style={{
-                background: "rgba(244,197,66,0.12)",
-                color: "var(--dorado)",
-                border: "1px solid rgba(244,197,66,0.25)",
-              }}
-            >
-              Avanzado
-            </span>
-            <p className="diff-desc">
-              20 preguntas de análisis, comparación y aplicación. Requiere
-              razonar con los conceptos, no solo recordarlos.
-            </p>
-            <div className="diff-meta">
-              <span className="diff-meta-item">📋 20 preguntas</span>
-              <span className="diff-meta-item">🧠 Análisis profundo</span>
-            </div>
-          </button>
-        </div>
-
-        <div style={{ textAlign: "center" }}>
-          <button className="back-btn" onClick={() => setPhase("welcome")}>
-            ← Cambiar nombre
-          </button>
-        </div>
-      </div>
+  /* ── PERSONALITY TEST ────────────────────────────────────── */
+  if (phase === "personality") {
+    return (
+      <PersonalityTest
+        playerName={playerName}
+        playerEmoji={playerEmoji}
+        onBack={() => setPhase("catalog")}
+      />
     );
   }
 
@@ -665,12 +574,12 @@ export default function TriviaGame() {
   if (phase === "results") {
     const total = deck.length;
     const pct = Math.round((score / total) * 100);
+    const activeQuiz = getQuizById(selectedQuizId);
     let emoji: string, title: string, msg: string;
     if (pct === 100) {
       emoji = "🏆";
       title = "¡Perfecto!";
-      msg =
-        "Dominás todos los conceptos del capítulo. Ecosistemas, relaciones biológicas, cadenas tróficas... todo claro. ¡Excelente trabajo!";
+      msg = "Dominás todos los conceptos del tema. ¡Excelente trabajo!";
     } else if (pct >= 80) {
       emoji = "🌿";
       title = "¡Muy bien!";
@@ -679,23 +588,24 @@ export default function TriviaGame() {
     } else if (pct >= 60) {
       emoji = "📚";
       title = "Bien, pero podés mejorar";
-      msg =
-        "Conocés las bases, pero algunos conceptos necesitan repaso. Prestá atención a los tipos de relaciones interespecíficas y los niveles de organización.";
+      msg = "Conocés las bases, pero algunos conceptos necesitan repaso.";
     } else if (pct >= 40) {
       emoji = "🔍";
       title = "Hay que repasar";
       msg =
-        "Te falta afianzar varios conceptos. Volvé a leer el capítulo prestando especial atención a productores, consumidores y los tipos de relaciones.";
+        "Te falta afianzar varios conceptos. Volvé a estudiar el tema con más atención.";
     } else {
       emoji = "💡";
       title = "¡A estudiar!";
       msg =
-        "Todavía hay mucho por aprender. No te desanimes: volvé al texto y cuando lo tengas más fresco, intentalo de nuevo.";
+        "Todavía hay mucho por aprender. No te desanimes: repasá el material e intentalo de nuevo.";
     }
 
     const rank = savedEntry
       ? leaderboard
-          .filter((e) => e.difficulty === difficulty)
+          .filter(
+            (e) => e.difficulty === difficulty && e.quiz_id === selectedQuizId,
+          )
           .findIndex((e) => e.id === savedEntry.id) + 1
       : null;
 
@@ -715,6 +625,17 @@ export default function TriviaGame() {
               {playerName.trim() || "Jugador"}
             </span>
           </div>
+          {activeQuiz && (
+            <div
+              style={{
+                color: "var(--gris)",
+                fontSize: 12,
+                marginTop: 2,
+              }}
+            >
+              {activeQuiz.emoji} {activeQuiz.title}
+            </div>
+          )}
           {saving && (
             <p style={{ color: "var(--gris)", fontSize: 11, marginTop: -4 }}>
               Guardando resultado...
@@ -741,15 +662,50 @@ export default function TriviaGame() {
           <div className="results-actions">
             <button
               className="restart-btn"
-              onClick={() => setPhase("difficulty")}
+              onClick={() => {
+                fetchLeaderboard();
+                setPhase("catalog");
+              }}
             >
-              🔄 Elegir nivel
+              🎮 Elegir trivia
             </button>
             <button
               className="restart-btn-secondary"
-              onClick={() => startGame(difficulty)}
+              onClick={() => startGame(selectedQuizId, difficulty)}
             >
               ↺ Repetir {difficulty === "hard" ? "Difícil" : "Normal"}
+            </button>
+            <button
+              style={{
+                padding: "13px 20px",
+                background: "#25D366",
+                border: "none",
+                borderRadius: 13,
+                fontFamily: "var(--font-unbounded), Unbounded, sans-serif",
+                fontSize: 12,
+                fontWeight: 700,
+                color: "#fff",
+                cursor: "pointer",
+                width: "100%",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                gap: 8,
+              }}
+              onClick={() => {
+                const quiz = getQuizById(selectedQuizId);
+                shareResultWhatsApp(
+                  playerName,
+                  playerEmoji,
+                  quiz?.title ?? "Trivia",
+                  score,
+                  deck.length,
+                  Math.round((score / deck.length) * 100),
+                  difficulty,
+                );
+              }}
+            >
+              💬 Compartir por WhatsApp
             </button>
             <button
               className="back-btn"
@@ -758,7 +714,7 @@ export default function TriviaGame() {
                 setPhase("welcome");
               }}
             >
-              🏠 Ver marcador
+              🏠 Inicio
             </button>
           </div>
         </div>
@@ -767,6 +723,7 @@ export default function TriviaGame() {
   }
 
   /* ── GAME ─────────────────────────────────────────────────── */
+  const activeQuiz = getQuizById(selectedQuizId);
   const q = deck[current];
   const total = deck.length;
   const progressPct = (current / total) * 100;
@@ -775,10 +732,25 @@ export default function TriviaGame() {
   return (
     <div className="trivia-container">
       <header className="game-header">
-        <div className="trivia-badge">🌿 Ciencias Naturales</div>
+        {activeQuiz && (
+          <div className="trivia-badge">
+            {activeQuiz.emoji} {activeQuiz.subject}
+          </div>
+        )}
         <h1 className="game-h1">
-          Trivia de{" "}
-          <span style={{ color: "var(--verde-claro)" }}>Ecosistemas</span>
+          {activeQuiz ? (
+            <>
+              {activeQuiz.emoji}{" "}
+              <span style={{ color: "var(--verde-claro)" }}>
+                {activeQuiz.title}
+              </span>
+            </>
+          ) : (
+            <>
+              Trivia{" "}
+              <span style={{ color: "var(--verde-claro)" }}>Educativa</span>
+            </>
+          )}
         </h1>
         <div className="player-info-row">
           <span style={{ fontSize: 16 }}>{playerEmoji}</span>

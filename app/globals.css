@@ -11,6 +11,12 @@
     --gris: #8fa89a;
     --dorado: #f4c542;
     --rojo: #e05252;
+    --azul: #3b82f6;
+    --azul-claro: #60a5fa;
+    --azul-oscuro: #1e3a5f;
+    --violeta: #8b5cf6;
+    --violeta-claro: #a78bfa;
+    --naranja: #f97316;
 }
 
 * {
@@ -1104,4 +1110,17 @@ input:focus {
     border-top-color: var(--verde-claro);
     border-radius: 50%;
     animation: lb-spin 0.7s linear infinite;
+}
+
+/* ── Quiz Catalog Grid ───────────────────────────────────── */
+.quiz-catalog-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 16px;
+    margin-bottom: 24px;
+}
+@media (min-width: 600px) {
+    .quiz-catalog-grid {
+        grid-template-columns: 1fr 1fr;
+    }
 }

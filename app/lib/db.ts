@@ -14,5 +14,6 @@ export type LeaderboardRow = {
   total: number;
   difficulty: "normal" | "hard";
   pct: number;
+  quiz_id: string;
   created_at: string;
 };
