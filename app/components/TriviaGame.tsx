@@ -60,6 +60,7 @@ export default function TriviaGame() {
   const [lbLoading, setLbLoading] = useState(true);
   const [lbError, setLbError] = useState(false);
   const [lbFilter, setLbFilter] = useState<"all" | "normal" | "hard">("all");
+  const [lbQuizFilter, setLbQuizFilter] = useState<string>("all");
   const [savedEntry, setSavedEntry] = useState<LeaderboardEntry | null>(null);
   const [saving, setSaving] = useState(false);
   const nameInputRef = useRef<HTMLInputElement>(null);
@@ -180,10 +181,13 @@ export default function TriviaGame() {
 
   /* ── WELCOME ─────────────────────────────────────────────── */
   if (phase === "welcome") {
-    const filtered =
-      lbFilter === "all"
-        ? leaderboard
-        : leaderboard.filter((e) => e.difficulty === lbFilter);
+    const quizMap = Object.fromEntries(quizzes.map((q) => [q.id, q]));
+
+    const filtered = leaderboard.filter((e) => {
+      const diffOk = lbFilter === "all" || e.difficulty === lbFilter;
+      const quizOk = lbQuizFilter === "all" || e.quiz_id === lbQuizFilter;
+      return diffOk && quizOk;
+    });
 
     const lbContent = () => {
       if (lbLoading) {
@@ -291,17 +295,45 @@ export default function TriviaGame() {
               <span style={{ fontSize: 15, textAlign: "center" }}>
                 {entry.emoji}
               </span>
-              <span
+              <div
                 style={{
-                  fontSize: 12,
-                  color: "var(--texto)",
+                  display: "flex",
+                  flexDirection: "column",
+                  gap: 2,
                   overflow: "hidden",
-                  textOverflow: "ellipsis",
-                  whiteSpace: "nowrap",
+                  minWidth: 0,
                 }}
               >
-                {entry.name}
-              </span>
+                <span
+                  style={{
+                    fontSize: 12,
+                    color: "var(--texto)",
+                    overflow: "hidden",
+                    textOverflow: "ellipsis",
+                    whiteSpace: "nowrap",
+                  }}
+                >
+                  {entry.name}
+                </span>
+                {(() => {
+                  const quiz = quizMap[entry.quiz_id];
+                  if (!quiz) return null;
+                  return (
+                    <span
+                      style={{
+                        fontSize: 9,
+                        color: quiz.color,
+                        overflow: "hidden",
+                        textOverflow: "ellipsis",
+                        whiteSpace: "nowrap",
+                        opacity: 0.85,
+                      }}
+                    >
+                      {quiz.emoji} {quiz.title}
+                    </span>
+                  );
+                })()}
+              </div>
               <span
                 style={{
                   fontSize: 11,
@@ -479,40 +511,22 @@ export default function TriviaGame() {
               overflow: "hidden",
             }}
           >
-            <div className="lb-header">
-              <span className="lb-title">🏆 Marcador</span>
-              <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
-                <div className="lb-tabs">
-                  {(["all", "normal", "hard"] as const).map((f) => (
-                    <button
-                      key={f}
-                      className="lb-tab"
-                      style={{
-                        background:
-                          lbFilter === f
-                            ? f === "hard"
-                              ? "rgba(244,197,66,0.15)"
-                              : "rgba(82,183,136,0.15)"
-                            : "transparent",
-                        color:
-                          lbFilter === f
-                            ? f === "hard"
-                              ? "var(--dorado)"
-                              : "var(--verde-claro)"
-                            : "var(--gris)",
-                        borderColor:
-                          lbFilter === f
-                            ? f === "hard"
-                              ? "rgba(244,197,66,0.4)"
-                              : "rgba(82,183,136,0.4)"
-                            : "transparent",
-                      }}
-                      onClick={() => setLbFilter(f)}
-                    >
-                      {f === "all" ? "Todo" : f === "normal" ? "🌱" : "🔥"}
-                    </button>
-                  ))}
-                </div>
+            <div
+              style={{
+                borderBottom: "1px solid rgba(82,183,136,0.1)",
+                padding: "12px 14px 10px",
+              }}
+            >
+              {/* Row 1: title + refresh */}
+              <div
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "space-between",
+                  marginBottom: 10,
+                }}
+              >
+                <span className="lb-title">🏆 Marcador</span>
                 <button
                   onClick={fetchLeaderboard}
                   disabled={lbLoading}
@@ -530,6 +544,88 @@ export default function TriviaGame() {
                 >
                   🔄
                 </button>
+              </div>
+
+              {/* Row 2: quiz filter tabs */}
+              <div
+                style={{
+                  display: "flex",
+                  gap: 4,
+                  flexWrap: "wrap",
+                  marginBottom: 8,
+                }}
+              >
+                {[
+                  { id: "all", label: "Todas" },
+                  ...quizzes.map((q) => ({
+                    id: q.id,
+                    label: `${q.emoji} ${q.title.replace("Trivia de ", "").replace("Tecnología ", "Tech ")}`,
+                    color: q.color,
+                  })),
+                ].map((f) => (
+                  <button
+                    key={f.id}
+                    className="lb-tab"
+                    style={{
+                      background:
+                        lbQuizFilter === f.id
+                          ? "rgba(82,183,136,0.15)"
+                          : "transparent",
+                      color:
+                        lbQuizFilter === f.id
+                          ? "color" in f && f.color
+                            ? f.color
+                            : "var(--verde-claro)"
+                          : "var(--gris)",
+                      borderColor:
+                        lbQuizFilter === f.id
+                          ? "color" in f && f.color
+                            ? f.color
+                            : "rgba(82,183,136,0.4)"
+                          : "transparent",
+                    }}
+                    onClick={() => setLbQuizFilter(f.id)}
+                  >
+                    {f.label}
+                  </button>
+                ))}
+              </div>
+
+              {/* Row 3: difficulty filter tabs */}
+              <div style={{ display: "flex", gap: 4 }}>
+                {(["all", "normal", "hard"] as const).map((f) => (
+                  <button
+                    key={f}
+                    className="lb-tab"
+                    style={{
+                      background:
+                        lbFilter === f
+                          ? f === "hard"
+                            ? "rgba(244,197,66,0.15)"
+                            : "rgba(82,183,136,0.15)"
+                          : "transparent",
+                      color:
+                        lbFilter === f
+                          ? f === "hard"
+                            ? "var(--dorado)"
+                            : "var(--verde-claro)"
+                          : "var(--gris)",
+                      borderColor:
+                        lbFilter === f
+                          ? f === "hard"
+                            ? "rgba(244,197,66,0.4)"
+                            : "rgba(82,183,136,0.4)"
+                          : "transparent",
+                    }}
+                    onClick={() => setLbFilter(f)}
+                  >
+                    {f === "all"
+                      ? "Dificultad"
+                      : f === "normal"
+                        ? "🌱 Normal"
+                        : "🔥 Difícil"}
+                  </button>
+                ))}
               </div>
             </div>
 

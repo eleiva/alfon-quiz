@@ -15,9 +15,9 @@ const dmSans = DM_Sans({
 });
 
 export const metadata: Metadata = {
-  title: "Trivia de Ecosistemas",
+  title: "Trivias Educativas",
   description:
-    "20 preguntas sobre ecosistemas y relaciones biológicas · Nivel intermedio",
+    "Trivias de Ciencias Naturales y Tecnología · Test de personalidad · Herramientas docentes",
 };
 
 export default function RootLayout({

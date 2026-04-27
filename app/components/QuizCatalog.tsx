@@ -451,6 +451,141 @@ export default function QuizCatalog({
           </div>
         </div>
 
+        {/* ── Featured: Desafío Educativo card ─────────────────── */}
+        <div
+          style={{
+            gridColumn: "1 / -1",
+            background: "var(--card)",
+            border: "1px solid rgba(59,130,246,0.3)",
+            borderRadius: 18,
+            overflow: "hidden",
+          }}
+        >
+          <div
+            style={{
+              height: 4,
+              background:
+                "linear-gradient(90deg, var(--azul), var(--azul-claro), var(--verde-claro))",
+            }}
+          />
+          <div style={{ padding: "20px 20px 18px" }}>
+            <div
+              style={{
+                display: "inline-flex",
+                alignItems: "center",
+                gap: 6,
+                background: "rgba(59,130,246,0.1)",
+                color: "var(--azul)",
+                border: "1px solid rgba(59,130,246,0.25)",
+                borderRadius: 100,
+                padding: "5px 13px",
+                fontSize: 9,
+                fontWeight: 700,
+                letterSpacing: 2,
+                textTransform: "uppercase" as const,
+                fontFamily: "var(--font-unbounded), Unbounded, sans-serif",
+                marginBottom: 12,
+              }}
+            >
+              🎓 PARA EL PROFE
+            </div>
+
+            <div style={{ display: "flex", alignItems: "flex-start", gap: 16 }}>
+              <div style={{ fontSize: 44, lineHeight: 1, flexShrink: 0 }}>
+                🎨
+              </div>
+              <div style={{ flex: 1, minWidth: 0 }}>
+                <h2
+                  style={{
+                    fontFamily: "var(--font-unbounded), Unbounded, sans-serif",
+                    fontSize: 15,
+                    fontWeight: 700,
+                    color: "var(--azul-claro)",
+                    marginBottom: 4,
+                    lineHeight: 1.3,
+                  }}
+                >
+                  Diseñadores sin pantalla
+                </h2>
+                <p
+                  style={{
+                    color: "var(--gris)",
+                    fontSize: 12,
+                    lineHeight: 1.5,
+                    marginBottom: 12,
+                  }}
+                >
+                  Actividad colaborativa: 7 equipos diseñan apps sin
+                  computadora. Cronómetro, roles, desafíos y puntajes para
+                  gestionar la clase.
+                </p>
+                <div
+                  style={{
+                    display: "flex",
+                    flexWrap: "wrap" as const,
+                    gap: 6,
+                    marginBottom: 16,
+                  }}
+                >
+                  {[
+                    "⏱ Cronómetro por fases",
+                    "👥 7 equipos sorteados",
+                    "🎯 8 desafíos",
+                    "🏆 Tabla de puntajes",
+                  ].map((chip) => (
+                    <span
+                      key={chip}
+                      style={{
+                        background: "rgba(59,130,246,0.08)",
+                        color: "var(--azul-claro)",
+                        border: "1px solid rgba(59,130,246,0.2)",
+                        borderRadius: 100,
+                        padding: "4px 10px",
+                        fontSize: 10,
+                      }}
+                    >
+                      {chip}
+                    </span>
+                  ))}
+                </div>
+                <a
+                  href="/desafio"
+                  style={{
+                    display: "block",
+                    width: "100%",
+                    padding: "12px 16px",
+                    borderRadius: 50,
+                    border: "none",
+                    background:
+                      "linear-gradient(90deg, var(--azul), var(--azul-claro))",
+                    color: "#fff",
+                    fontFamily: "var(--font-unbounded), Unbounded, sans-serif",
+                    fontSize: 13,
+                    fontWeight: 700,
+                    cursor: "pointer",
+                    textDecoration: "none",
+                    textAlign: "center" as const,
+                    boxSizing: "border-box" as const,
+                    lineHeight: "1.4",
+                  }}
+                >
+                  🎨 Abrir herramienta docente →
+                </a>
+                <p
+                  style={{
+                    color: "var(--gris)",
+                    fontSize: 10,
+                    textAlign: "center" as const,
+                    marginTop: 8,
+                  }}
+                >
+                  Se abre en esta misma pestaña · No requiere login
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+
         {quizzes.map((quiz) => {
           const colorHex = quizColorHex(quiz.color);
           const accentHex = quizColorHex(quiz.accentColor);

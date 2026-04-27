@@ -676,6 +676,918 @@ const techAvanzadoQuiz: Quiz = {
 };
 
 // ---------------------------------------------------------------------------
+// Quiz 4 — Bases de Datos (Normal)
+// ---------------------------------------------------------------------------
+
+const baseDatosNormal: Question[] = [
+  // Q1
+  {
+    category: "c01 — Intro SQL",
+    question: "¿Qué significa la sigla SQL?",
+    options: [
+      "Structured Query Language",
+      "Simple Queue Language",
+      "Standard Question Logic",
+      "Sequential Query List",
+    ],
+    correct: 0,
+    explanation:
+      "SQL significa Structured Query Language (Lenguaje de Consulta Estructurado). Es el estándar para interactuar con bases de datos relacionales.",
+  },
+  // Q2
+  {
+    category: "c01 — Intro SQL",
+    question: "¿Cuáles son los dos sublenguajes principales del estándar SQL?",
+    options: [
+      "SQL-SELECT y SQL-INSERT",
+      "SQL-DDL y SQL-DML",
+      "SQL-READ y SQL-WRITE",
+      "SQL-SCHEMA y SQL-DATA",
+    ],
+    correct: 1,
+    explanation:
+      "SQL-DDL (Data Definition Language) define la estructura de la base de datos. SQL-DML (Data Manipulation Language) permite consultar, insertar, modificar y eliminar datos.",
+  },
+  // Q3
+  {
+    category: "c01 — Intro SQL",
+    question:
+      "¿Qué institución fue clave en la estandarización de SQL junto a ANSI?",
+    options: ["NASA", "NIST (antes llamado NBS)", "IEEE", "W3C"],
+    correct: 1,
+    explanation:
+      "El NIST (National Institute of Standards and Technology), antes NBS, fue fundamental en la construcción de consenso para estandarizar SQL entre gobierno e industria.",
+  },
+  // Q4
+  {
+    category: "c02 — Normalización",
+    question: "¿Qué exige la Primera Forma Normal (1FN)?",
+    options: [
+      "Que no haya dependencias transitivas",
+      "Que todos los atributos sean atómicos y no haya grupos repetidos",
+      "Que la tabla tenga clave primaria compuesta",
+      "Que cada columna tenga un índice",
+    ],
+    correct: 1,
+    explanation:
+      "La 1FN exige que todos los atributos sean atómicos (no divisibles) y que no existan grupos repetidos ni atributos multivaluados en la misma columna.",
+  },
+  // Q5
+  {
+    category: "c02 — Normalización",
+    question:
+      "¿Qué tipo de anomalía ocurre cuando cambiar un dato lógico obliga a modificar múltiples filas?",
+    options: [
+      "Anomalía de inserción",
+      "Anomalía de actualización",
+      "Anomalía de borrado",
+      "Anomalía de duplicación",
+    ],
+    correct: 1,
+    explanation:
+      "La anomalía de actualización ocurre cuando un cambio lógico (como el nombre de una ciudad) obliga a modificar múltiples filas, por ejemplo en 500 registros de clientes.",
+  },
+  // Q6
+  {
+    category: "c02 — Normalización",
+    question:
+      "¿Qué anomalía ocurre cuando no podés registrar un proveedor sin tener al menos un producto asociado?",
+    options: [
+      "Anomalía de actualización",
+      "Anomalía de borrado",
+      "Anomalía de inserción",
+      "Anomalía de duplicación",
+    ],
+    correct: 2,
+    explanation:
+      "La anomalía de inserción ocurre cuando no es posible insertar un dato sin que existan otros relacionados. Ejemplo: no poder cargar un proveedor sin un producto que lo vincule.",
+  },
+  // Q7
+  {
+    category: "c03 — BCNF / 4FN",
+    question: "¿Qué es una dependencia multivaluada?",
+    options: [
+      "Cuando A determina unívocamente a B",
+      "Cuando A determina un conjunto de valores de B",
+      "Cuando B depende de parte de una clave compuesta",
+      "Cuando A depende transitivamente de la PK",
+    ],
+    correct: 1,
+    explanation:
+      "Una dependencia multivaluada A →→ B ocurre cuando A determina un conjunto de valores de B, independientemente de los demás atributos. La 4FN elimina este tipo de dependencia.",
+  },
+  // Q8
+  {
+    category: "c04 — Constraints",
+    question:
+      "¿Qué constraint en PostgreSQL garantiza que un campo no pueda tener valores duplicados?",
+    options: ["NOT NULL", "CHECK", "UNIQUE", "DEFAULT"],
+    correct: 2,
+    explanation:
+      "El constraint UNIQUE garantiza que ningún valor en esa columna (o combinación de columnas) se repita en la tabla.",
+  },
+  // Q9
+  {
+    category: "c04 — Constraints",
+    question: "¿Qué hace ON DELETE CASCADE en una clave foránea?",
+    options: [
+      "Bloquea el borrado si hay registros hijos",
+      "Pone NULL en la FK del hijo al borrar el padre",
+      "Propaga el borrado a todos los registros hijos",
+      "No hace nada; es el comportamiento por defecto",
+    ],
+    correct: 2,
+    explanation:
+      "ON DELETE CASCADE propaga el borrado: si se elimina un registro padre, todos sus registros hijos son eliminados automáticamente.",
+  },
+  // Q10
+  {
+    category: "c04 — Constraints",
+    question:
+      "¿Qué constraint usarías para garantizar que el campo 'precio' siempre sea mayor a cero?",
+    options: ["NOT NULL", "UNIQUE", "CHECK (precio > 0)", "DEFAULT 0"],
+    correct: 2,
+    explanation:
+      "El constraint CHECK permite definir una condición arbitraria. CHECK (precio > 0) rechaza cualquier insert o update que intente poner un precio negativo o cero.",
+  },
+  // Q11
+  {
+    category: "c05 — CTEs",
+    question: "¿Qué significa CTE en SQL?",
+    options: [
+      "Column Table Expression",
+      "Common Table Expression",
+      "Conditional Transaction Engine",
+      "Computed Temporary Entity",
+    ],
+    correct: 1,
+    explanation:
+      "CTE significa Common Table Expression. Se define con la cláusula WITH y permite nombrar subconsultas para reutilizarlas, mejorando la legibilidad de consultas complejas.",
+  },
+  // Q12
+  {
+    category: "c05 — Window Functions",
+    question:
+      "¿Cuál es la diferencia principal entre GROUP BY y las Window Functions?",
+    options: [
+      "GROUP BY es más rápido siempre",
+      "Window Functions colapsan las filas igual que GROUP BY",
+      "GROUP BY colapsa filas; las Window Functions calculan valores por fila sin colapsar el resultado",
+      "No hay diferencia, son equivalentes",
+    ],
+    correct: 2,
+    explanation:
+      "GROUP BY agrupa y colapsa las filas en una por grupo. Las Window Functions calculan un valor por fila (rankings, acumulados) manteniendo todas las filas visibles en el resultado.",
+  },
+  // Q13
+  {
+    category: "c05 — Subconsultas",
+    question: "¿Qué hace la cláusula NOT EXISTS en una consulta SQL?",
+    options: [
+      "Verifica que la subconsulta no tenga errores de sintaxis",
+      "Retorna las filas donde la subconsulta no devuelve ningún resultado",
+      "Elimina los duplicados del resultado principal",
+      "Excluye los valores NULL del resultado",
+    ],
+    correct: 1,
+    explanation:
+      "NOT EXISTS retorna las filas externas para las cuales la subconsulta no encuentra ningún resultado. Se usa para encontrar registros sin relaciones, como clientes sin pedidos.",
+  },
+  // Q14
+  {
+    category: "c06 — Funciones y Procedures",
+    question: "¿Con qué sentencia se invoca un Stored Procedure en PostgreSQL?",
+    options: ["SELECT proc()", "EXECUTE proc()", "CALL proc()", "RUN proc()"],
+    correct: 2,
+    explanation:
+      "Los Stored Procedures se invocan con CALL. Las funciones se usan dentro de un SELECT. Esta diferencia es clave entre ambos objetos en PostgreSQL.",
+  },
+  // Q15
+  {
+    category: "c06 — Funciones",
+    question:
+      "¿Qué lenguaje se usa para escribir funciones con lógica condicional (IF, loops) en PostgreSQL?",
+    options: ["T-SQL", "PL/pgSQL", "PL/Python exclusivamente", "JavaScript"],
+    correct: 1,
+    explanation:
+      "PL/pgSQL es el lenguaje procedural nativo de PostgreSQL. Permite escribir funciones y triggers con lógica condicional (IF/THEN/ELSE), bucles y manejo de excepciones.",
+  },
+  // Q16
+  {
+    category: "c06 — Triggers",
+    question:
+      "¿Qué tipo de trigger permite modificar los datos ANTES de que se inserten en la tabla?",
+    options: [
+      "AFTER trigger",
+      "BEFORE trigger",
+      "INSTEAD OF trigger",
+      "ON COMMIT trigger",
+    ],
+    correct: 1,
+    explanation:
+      "El trigger BEFORE se ejecuta antes de cada fila afectada. En él, NEW puede modificarse (por ejemplo, normalizar el email a minúsculas antes del INSERT).",
+  },
+  // Q17
+  {
+    category: "c07 — Transacciones",
+    question: "¿Qué significa ACID en el contexto de bases de datos?",
+    options: [
+      "Atomicity, Consistency, Isolation, Durability",
+      "Access, Control, Integrity, Distribution",
+      "Automated, Concurrent, Indexed, Durable",
+      "Atomic, Cached, Integrated, Dynamic",
+    ],
+    correct: 0,
+    explanation:
+      "ACID: Atomicity (todo o nada), Consistency (estado válido a válido), Isolation (sin interferencia entre transacciones) y Durability (persiste ante fallos).",
+  },
+  // Q18
+  {
+    category: "c07 — Transacciones",
+    question:
+      "¿Qué sentencia SQL deshace todos los cambios de una transacción en curso?",
+    options: ["UNDO", "REVERT", "ROLLBACK", "CANCEL"],
+    correct: 2,
+    explanation:
+      "ROLLBACK deshace todos los cambios realizados desde el BEGIN. Con ROLLBACK TO SAVEPOINT nombre solo deshace hasta un punto intermedio guardado.",
+  },
+  // Q19
+  {
+    category: "c07 — Transacciones",
+    question:
+      "¿Cómo opera PostgreSQL por defecto respecto a las transacciones?",
+    options: [
+      "Todas las sentencias quedan pendientes hasta un COMMIT manual",
+      "En modo autocommit: cada sentencia es su propia transacción confirmada automáticamente",
+      "Requiere siempre un BEGIN explícito antes de cualquier operación",
+      "Nunca confirma cambios de forma automática",
+    ],
+    correct: 1,
+    explanation:
+      "PostgreSQL opera en modo autocommit por defecto: cada sentencia individual es una transacción separada que se confirma sola. Para agrupar operaciones hay que usar BEGIN explícitamente.",
+  },
+  // Q20
+  {
+    category: "c07 — Transacciones",
+    question: "¿Qué es un SAVEPOINT en el contexto de una transacción?",
+    options: [
+      "Un backup automático que PostgreSQL hace cada cierto tiempo",
+      "Un punto intermedio dentro de una transacción al que se puede volver con ROLLBACK TO",
+      "Una confirmación parcial de los cambios realizados hasta ese momento",
+      "Un mecanismo para pausar la transacción y reanudarla después",
+    ],
+    correct: 1,
+    explanation:
+      "Un SAVEPOINT es un marcador dentro de una transacción activa. Con ROLLBACK TO SAVEPOINT nombre se deshacen solo los cambios posteriores a ese punto, sin terminar la transacción.",
+  },
+];
+
+// ---------------------------------------------------------------------------
+// Quiz 5 — Bases de Datos (Hard)
+// ---------------------------------------------------------------------------
+
+const baseDatosHard: Question[] = [
+  // Q1
+  {
+    category: "c01 — Intro SQL",
+    question:
+      "¿Por qué se decidió estandarizar un lenguaje (SQL) en lugar de las capacidades internas de los motores de bases de datos?",
+    options: [
+      "Porque los lenguajes son más fáciles de aprender que las APIs internas",
+      "Porque la única forma de estandarizar software es a través de una interfaz de lenguaje común que ambos lados entiendan",
+      "Porque IBM propuso el lenguaje y los demás lo adoptaron por presión comercial",
+      "Porque NIST obligó a todas las empresas a adoptar un único motor relacional",
+    ],
+    correct: 1,
+    explanation:
+      "Estandarizar capacidades internas es imposible porque cada motor es propietario. La única forma viable es definir un lenguaje como interfaz entre la aplicación y cualquier motor, sin importar su implementación interna.",
+  },
+  // Q2
+  {
+    category: "c01 — Intro SQL",
+    question:
+      "Según Elizabeth Fong, ¿cuál es el riesgo de estandarizar una tecnología demasiado pronto?",
+    options: [
+      "Que el estándar sea adoptado por muy pocas empresas",
+      "Que el mercado quede fragmentado con demasiados enfoques incompatibles",
+      "Que se ahuyente la innovación porque las empresas no ven cómo competir con el estándar ya definido",
+      "Que el gobierno pierda control sobre las adquisiciones tecnológicas",
+    ],
+    correct: 2,
+    explanation:
+      "Estandarizar muy temprano mata la innovación: las empresas sienten que todo ya está decidido y un producto mejor sería 'no estándar', sin posibilidad de entrar al mercado.",
+  },
+  // Q3
+  {
+    category: "c01 — Intro SQL",
+    question:
+      "¿Cuáles son las 5 funcionalidades mínimas que debe tener un SGBD según el modelo de referencia del DBSSG?",
+    options: [
+      "Crear, Leer, Actualizar, Eliminar y Reportar datos",
+      "Almacenar, Recuperar, Modificar, Organizar y Eliminar datos",
+      "Indexar, Consultar, Replicar, Respaldar y Encriptar datos",
+      "Conectar, Autenticar, Consultar, Modificar y Cerrar sesión",
+    ],
+    correct: 1,
+    explanation:
+      "El DBSSG definió que un SGBD mínimo debe poder: Almacenar, Recuperar, Modificar, Organizar y Eliminar datos. Esta definición fue la base del proceso de estandarización que derivó en SQL.",
+  },
+  // Q4
+  {
+    category: "c02 — Normalización",
+    question:
+      "Una tabla VENTAS(nro_factura, producto_id, producto_nombre, cantidad) tiene que producto_nombre depende de producto_id, no de la clave completa. ¿Qué forma normal se viola?",
+    options: [
+      "1FN — por tener atributos no atómicos",
+      "2FN — por dependencia parcial de la clave compuesta",
+      "3FN — por dependencia transitiva",
+      "BCNF — porque producto_id no es superclave",
+    ],
+    correct: 1,
+    explanation:
+      "Se viola la 2FN. La dependencia parcial ocurre cuando un atributo no-clave (producto_nombre) depende de solo una parte de la clave primaria compuesta (producto_id), no de la clave completa.",
+  },
+  // Q5
+  {
+    category: "c02 — Normalización",
+    question:
+      "¿Cuándo conviene desnormalizar una tabla en lugar de mantenerla completamente normalizada?",
+    options: [
+      "Siempre que el número de tablas en el esquema supere 10",
+      "Cuando hay queries de lectura muy frecuentes con muchos JOINs y el rendimiento es prioritario",
+      "Cuando los datos son puramente históricos y nunca se modifican",
+      "Nunca: la desnormalización siempre introduce inconsistencias inevitables",
+    ],
+    correct: 1,
+    explanation:
+      "La desnormalización controlada mejora la performance de lectura (dashboards, data warehouses) a cambio de mayor complejidad en escrituras. Requiere mitigaciones como triggers o documentar la fuente de verdad.",
+  },
+  // Q6
+  {
+    category: "c02 — Normalización",
+    question:
+      "Una tabla clientes tiene (id, nombre, codigo_postal, ciudad) donde ciudad depende de codigo_postal. ¿Qué forma normal se viola?",
+    options: ["1FN", "2FN", "3FN", "BCNF"],
+    correct: 2,
+    explanation:
+      "Se viola la 3FN por dependencia transitiva: ciudad depende de codigo_postal, que a su vez depende de la PK (id). La solución es separar en una tabla ciudades(codigo_postal, ciudad).",
+  },
+  // Q7
+  {
+    category: "c03 — BCNF",
+    question:
+      "Dada la relación Inscripciones(estudiante, materia, profesor) con dependencias: (estudiante, materia) → profesor y profesor → materia. ¿Por qué NO está en BCNF?",
+    options: [
+      "Porque tiene atributos multivaluados no declarados",
+      "Porque 'profesor → materia' viola BCNF: profesor determina materia pero no es superclave",
+      "Porque la clave primaria compuesta no está formalmente definida",
+      "Porque viola la 1FN al tener grupos repetidos de inscripciones",
+    ],
+    correct: 1,
+    explanation:
+      "BCNF exige que para toda dependencia funcional X → Y, X sea superclave. Aquí 'profesor → materia' viola BCNF porque 'profesor' no es superclave de la relación, aunque sí esté en 3FN.",
+  },
+  // Q8
+  {
+    category: "c03 — 4FN",
+    question:
+      "Un empleado puede tener múltiples habilidades y pertenecer a múltiples proyectos de forma independiente. Si se modela en una sola tabla (empleado, habilidad, proyecto), ¿qué forma normal se viola?",
+    options: [
+      "2FN — porque habilidad y proyecto dependen parcialmente de empleado",
+      "3FN — porque existe una dependencia transitiva entre habilidad y proyecto",
+      "BCNF — porque empleado no es superclave para todas las dependencias",
+      "4FN — porque hay dos dependencias multivaluadas independientes sobre el mismo atributo",
+    ],
+    correct: 3,
+    explanation:
+      "Se viola la 4FN. Hay dos dependencias multivaluadas independientes: empleado →→ habilidad y empleado →→ proyecto. La solución es crear dos tablas separadas: (empleado, habilidad) y (empleado, proyecto).",
+  },
+  // Q9
+  {
+    category: "c04 — Constraints",
+    question:
+      "¿Cuándo usarías ON DELETE RESTRICT en lugar de ON DELETE CASCADE en una clave foránea?",
+    options: [
+      "Cuando los hijos no tienen sentido sin el padre, como ítems de un pedido",
+      "Cuando querés proteger integridad, como impedir borrar un producto con historial de ventas",
+      "Cuando la clave foránea puede ser NULL opcionalmente",
+      "Cuando la tabla referenciada es muy grande y CASCADE sería lento",
+    ],
+    correct: 1,
+    explanation:
+      "RESTRICT protege la integridad bloqueando el borrado si existen hijos. Se usa cuando borrar el padre sería peligroso (producto con ventas). CASCADE se usa cuando los hijos no tienen sentido sin el padre (ítems de un pedido).",
+  },
+  // Q10
+  {
+    category: "c04 — Constraints",
+    question: "¿Qué hace ON DELETE SET NULL en una clave foránea?",
+    options: [
+      "Borra los registros hijos automáticamente",
+      "Bloquea el borrado del padre si tiene hijos",
+      "Pone NULL en la columna FK de los hijos cuando se borra el padre",
+      "Asigna el valor DEFAULT a la FK de los hijos",
+    ],
+    correct: 2,
+    explanation:
+      "ON DELETE SET NULL pone NULL en la columna FK de todos los registros hijos cuando se borra el padre. Útil cuando el hijo puede existir sin padre (ej: un pedido cuyo cliente fue eliminado).",
+  },
+  // Q11
+  {
+    category: "c05 — Subconsultas",
+    question:
+      "¿Por qué EXISTS suele ser más eficiente que IN cuando la subconsulta puede devolver muchas filas?",
+    options: [
+      "Porque EXISTS usa índices automáticamente mientras que IN no puede usarlos",
+      "Porque EXISTS hace short-circuit: se detiene en el primer match sin procesar el resto",
+      "Porque IN requiere ordenar todos los resultados de la subconsulta antes de comparar",
+      "Porque EXISTS usa menos memoria de trabajo que IN en cualquier caso",
+    ],
+    correct: 1,
+    explanation:
+      "EXISTS se detiene apenas encuentra el primer resultado que satisface la condición (short-circuit evaluation). IN en cambio evalúa y materializa todos los resultados de la subconsulta antes de comparar.",
+  },
+  // Q12
+  {
+    category: "c05 — Window Functions",
+    question:
+      "¿Cuál es la diferencia entre RANK() y DENSE_RANK() cuando hay empates en el ordenamiento?",
+    options: [
+      "No hay diferencia, ambas asignan los mismos números",
+      "RANK() deja huecos en la numeración tras un empate; DENSE_RANK() no los deja",
+      "DENSE_RANK() deja huecos; RANK() es siempre continuo",
+      "RANK() solo funciona con ORDER BY DESC",
+    ],
+    correct: 1,
+    explanation:
+      "Con empate en posición 1: RANK() asigna 1,1,3 (deja hueco). DENSE_RANK() asigna 1,1,2 (no deja huecos). ROW_NUMBER() siempre asigna números únicos: 1,2,3.",
+  },
+  // Q13
+  {
+    category: "c05 — JSONB",
+    question:
+      "¿Qué operador JSONB en PostgreSQL verifica si un documento 'contiene' un JSON específico y es muy eficiente con índice GIN?",
+    options: [
+      "->> (extrae valor como texto)",
+      "-> (extrae valor como JSON)",
+      "@> (contiene)",
+      "#>> (ruta anidada)",
+    ],
+    correct: 2,
+    explanation:
+      "El operador @> (contiene) verifica si el JSONB izquierdo contiene el JSON derecho. Ejemplo: atributos @> '{\"ram\": 16}'. Es muy eficiente cuando existe un índice GIN sobre la columna JSONB.",
+  },
+  // Q14
+  {
+    category: "c05 — JSONB",
+    question:
+      "¿Cuál es la diferencia entre los operadores -> y ->> en JSONB de PostgreSQL?",
+    options: [
+      "-> busca en rutas anidadas; ->> solo busca en el primer nivel",
+      "-> devuelve el valor como JSON (con comillas); ->> devuelve el valor como texto plano (sin comillas)",
+      "-> filtra documentos; ->> extrae campos del documento",
+      "No hay diferencia funcional, son alias el uno del otro",
+    ],
+    correct: 1,
+    explanation:
+      '-> devuelve el valor como tipo JSON (por ejemplo: "Dell" con comillas). ->> devuelve el valor como texto plano (Dell sin comillas), útil para comparaciones en WHERE o para mostrar al usuario.',
+  },
+  // Q15
+  {
+    category: "c06 — Funciones vs Procedures",
+    question:
+      "¿Cuál es la diferencia más importante entre una función y un stored procedure en PostgreSQL respecto al control de transacciones?",
+    options: [
+      "Las funciones pueden hacer COMMIT explícito; los procedures no",
+      "Los procedures pueden ejecutar COMMIT/ROLLBACK explícitos; las funciones no pueden hacerlo",
+      "Ambos pueden controlar transacciones de la misma forma con BEGIN/COMMIT",
+      "Ninguno de los dos puede controlar transacciones: eso es solo del cliente",
+    ],
+    correct: 1,
+    explanation:
+      "Un stored procedure puede ejecutar COMMIT y ROLLBACK explícitos dentro de su cuerpo. Una función no puede hacerlo porque se ejecuta dentro de la transacción del llamador.",
+  },
+  // Q16
+  {
+    category: "c06 — Triggers",
+    question:
+      "¿Por qué se recomienda usar triggers con precaución en producción?",
+    options: [
+      "Porque los triggers no son compatibles con todas las versiones de PostgreSQL",
+      "Porque generan lógica oculta, pueden encadenarse entre sí y degradar la performance en inserciones masivas",
+      "Porque solo funcionan con tablas que tienen clave primaria definida",
+      "Porque no pueden combinarse con foreign keys en el mismo esquema",
+    ],
+    correct: 1,
+    explanation:
+      "Los triggers tienen lógica 'invisible' que no se ve al leer el SQL de la aplicación, pueden disparar otros triggers en cadena, y en modo FOR EACH ROW pueden ser muy lentos en inserciones masivas.",
+  },
+  // Q17
+  {
+    category: "c06 — Triggers",
+    question:
+      "¿Qué variables especiales están disponibles dentro de una función trigger en PostgreSQL?",
+    options: [
+      "SELF y PARENT",
+      "NEW y OLD",
+      "CURRENT y PREVIOUS",
+      "INSERT_ROW y DELETE_ROW",
+    ],
+    correct: 1,
+    explanation:
+      "NEW contiene los valores del registro nuevo (disponible en INSERT y UPDATE). OLD contiene los valores del registro anterior (disponible en UPDATE y DELETE). TG_OP indica la operación que disparó el trigger.",
+  },
+  // Q18
+  {
+    category: "c07 — Transacciones",
+    question: "¿Para qué sirve un SAVEPOINT dentro de una transacción?",
+    options: [
+      "Para confirmar parcialmente los cambios realizados hasta ese punto",
+      "Para crear un punto de retorno intermedio al que se puede hacer ROLLBACK sin deshacer toda la transacción",
+      "Para pausar la transacción y reanudarla en una sesión diferente",
+      "Para duplicar el estado actual de la base de datos en ese momento",
+    ],
+    correct: 1,
+    explanation:
+      "SAVEPOINT crea un marcador dentro de una transacción activa. Con ROLLBACK TO SAVEPOINT nombre se deshacen solo los cambios posteriores a ese punto, sin afectar los anteriores. La transacción continúa activa.",
+  },
+  // Q19
+  {
+    category: "c07 — Transacciones",
+    question:
+      "¿Qué mensaje de error emite PostgreSQL si intentás ejecutar un comando después de que ocurrió un error dentro de un BEGIN?",
+    options: [
+      "TRANSACTION_LOCKED: please commit or rollback first",
+      "ERROR: current transaction is aborted, commands ignored until end of transaction block",
+      "WARNING: transaction in error state, results may be undefined",
+      "FATAL: connection lost due to transaction error",
+    ],
+    correct: 1,
+    explanation:
+      "Cuando ocurre un error dentro de un bloque BEGIN, la transacción queda en estado abortado. PostgreSQL ignora todos los comandos siguientes con ese mensaje hasta que se hace ROLLBACK.",
+  },
+  // Q20
+  {
+    category: "c07 — Transacciones",
+    question:
+      "¿Qué propiedad ACID garantiza que si el servidor se apaga durante una transacción confirmada con COMMIT, los datos no se pierden?",
+    options: ["Atomicity", "Consistency", "Isolation", "Durability"],
+    correct: 3,
+    explanation:
+      "Durability garantiza que una vez que una transacción fue confirmada con COMMIT, sus cambios persisten incluso ante fallos del sistema. PostgreSQL lo implementa a través del WAL (Write-Ahead Log).",
+  },
+];
+
+// ---------------------------------------------------------------------------
+// Quiz 6 — Bases de Datos (Avanzado / Desafío)
+// ---------------------------------------------------------------------------
+
+const baseDatosAvanzado: Question[] = [
+  // Q1
+  {
+    category: "c01 — Estandarización SQL",
+    question:
+      "El proceso de estandarización de SQL tardó más de 10 años. Según el análisis de Elizabeth Fong, ¿por qué ese período prolongado fue beneficioso y no un fracaso?",
+    options: [
+      "Porque las disputas entre IBM y Oracle forzaron mejoras técnicas al estándar",
+      "Porque el proceso fue bidireccional: la industria informó el estándar y el estándar impulsó I+D, dando tiempo a las empresas para adoptar el modelo relacional",
+      "Porque el gobierno federal necesitaba tiempo para auditar cada propuesta antes de aprobarla",
+      "Porque la complejidad matemática del modelo relacional requirió años de investigación académica adicional",
+    ],
+    correct: 1,
+    explanation:
+      "El largo proceso fue bidireccional: la I+D de la industria informó el estándar, y el proceso de estandarización impulsó más investigación. Las empresas tuvieron tiempo de adoptar el modelo relacional antes de que el estándar se finalizara, construyendo un consenso real y duradero.",
+  },
+  // Q2
+  {
+    category: "c01 — Estandarización SQL",
+    question:
+      "¿Por qué el gobierno federal de EE.UU. tenía tanto interés en estandarizar SQL, y quién tenía la decisión final de compra?",
+    options: [
+      "Porque quería fomentar la industria tecnológica nacional; el NIST decidía qué comprar",
+      "Porque era un gran consumidor de tecnología propietaria y quería portabilidad; las agencias compradoras decidían, no el NIST",
+      "Porque quería eliminar a IBM del mercado; el Congreso aprobaba cada compra",
+      "Porque necesitaba interoperabilidad militar; el Departamento de Defensa tenía la decisión final",
+    ],
+    correct: 1,
+    explanation:
+      "El gobierno era un gran consumidor de sistemas costosos y propietarios. Necesitaba un estándar para evitar la dependencia de un proveedor. Sin embargo, la decisión final siempre fue de las agencias compradoras (las que pagan), no del NIST, que solo contribuía con el proceso de estandarización.",
+  },
+  // Q3
+  {
+    category: "c02 — Normalización avanzada",
+    question:
+      "Dada la relación R(A, B, C, D) con dependencias funcionales: AB → C, AB → D, C → B. ¿Está en BCNF? ¿Por qué?",
+    options: [
+      "Sí, porque la clave primaria AB determina todos los atributos restantes",
+      "No, porque C → B viola BCNF: C determina B pero C no es superclave de R",
+      "Sí, porque no existe ninguna dependencia transitiva entre atributos no-clave",
+      "No, porque D no participa en ninguna clave candidata de la relación",
+    ],
+    correct: 1,
+    explanation:
+      "BCNF exige que para toda dependencia funcional X → Y no trivial, X sea superclave. Aquí C → B viola BCNF: C no es superclave (no determina todos los atributos de R). La relación puede estar en 3FN y aun así no estar en BCNF cuando hay múltiples claves candidatas superpuestas.",
+  },
+  // Q4
+  {
+    category: "c02 — Normalización avanzada",
+    question:
+      "¿Cuál es el riesgo principal de desnormalizar una columna (por ejemplo, guardar un campo 'total' calculado) y cómo se mitiga en PostgreSQL?",
+    options: [
+      "El riesgo es que la columna ocupe más espacio; se mitiga con compresión TOAST",
+      "El riesgo es la inconsistencia de datos si se actualiza items pero no total; se mitiga con un trigger AFTER que recalcula",
+      "El riesgo es que la columna desnormalizada no pueda indexarse; se mitiga con índice parcial",
+      "El riesgo es que la query de lectura sea más lenta; se mitiga con una vista materializada",
+    ],
+    correct: 1,
+    explanation:
+      "El riesgo principal es la inconsistencia: si se insertan o modifican ítems sin actualizar el total, el dato desnormalizado queda desincronizado. Se mitiga con un trigger AFTER INSERT OR UPDATE OR DELETE en la tabla fuente que recalcula y actualiza el campo automáticamente.",
+  },
+  // Q5
+  {
+    category: "c03 — BCNF",
+    question:
+      "Dada la relación Inscripciones(estudiante, materia, profesor) con dependencias: (estudiante, materia) → profesor y profesor → materia. ¿Cuál es la descomposición correcta en BCNF?",
+    options: [
+      "Tabla1(estudiante, materia) y Tabla2(materia, profesor)",
+      "Tabla1(profesor, materia) y Tabla2(estudiante, profesor)",
+      "Tabla1(estudiante, materia, profesor) y Tabla2(profesor, materia) — sin cambios",
+      "Tabla1(estudiante, profesor) y Tabla2(estudiante, materia)",
+    ],
+    correct: 1,
+    explanation:
+      "La descomposición BCNF correcta es: Tabla1(profesor, materia) — resuelve la dependencia problemática profesor → materia — y Tabla2(estudiante, profesor) — conecta al estudiante con su profesor. Así toda determinante es superclave en su tabla.",
+  },
+  // Q6
+  {
+    category: "c04 — Constraints avanzados",
+    question:
+      "Tenés una tabla rangos(id, minimo, maximo). Querés garantizar que minimo < maximo siempre. ¿Qué mecanismo usarías en PostgreSQL?",
+    options: [
+      "Dos constraints NOT NULL separados sobre minimo y maximo",
+      "Un CHECK constraint a nivel de tabla: CHECK (minimo < maximo)",
+      "Una foreign key de minimo hacia maximo",
+      "Un índice UNIQUE compuesto sobre (minimo, maximo)",
+    ],
+    correct: 1,
+    explanation:
+      "Un CHECK a nivel de tabla puede referenciar múltiples columnas: CHECK (minimo < maximo). Se evalúa en cada INSERT y UPDATE, asegurando la invariante sin importar qué columna se modifique.",
+  },
+  // Q7
+  {
+    category: "c04 — Constraints avanzados",
+    question:
+      "¿Qué impacto tiene en producción ejecutar ALTER TABLE productos ADD CONSTRAINT chk_precio CHECK (precio > 0) sobre una tabla con millones de filas?",
+    options: [
+      "Ninguno: los nuevos constraints solo aplican a inserciones futuras",
+      "Adquiere un lock sobre la tabla y valida TODOS los registros existentes antes de confirmar",
+      "Falla inmediatamente si alguna fila viola el constraint, sin bloquear la tabla",
+      "Solo valida una muestra aleatoria de filas para minimizar el bloqueo",
+    ],
+    correct: 1,
+    explanation:
+      "Agregar un CHECK con ALTER TABLE adquiere un lock y valida todas las filas existentes. En tablas grandes en producción esto puede ser disruptivo. La alternativa es ADD CONSTRAINT ... NOT VALID (solo valida futuras escrituras) y luego VALIDATE CONSTRAINT por separado con un lock más liviano.",
+  },
+  // Q8
+  {
+    category: "c05 — Window Functions avanzadas",
+    question:
+      "¿Qué calcula esta query? SELECT mes, ventas, AVG(ventas) OVER (ORDER BY mes ROWS BETWEEN 2 PRECEDING AND CURRENT ROW) AS resultado FROM ventas_mensuales;",
+    options: [
+      "El promedio total de todas las ventas, repetido en cada fila",
+      "El promedio móvil de los últimos 3 meses (mes actual + 2 anteriores)",
+      "La suma acumulada de ventas desde el inicio hasta el mes actual",
+      "El promedio de ventas del mes actual comparado con el mismo mes del año anterior",
+    ],
+    correct: 1,
+    explanation:
+      "ROWS BETWEEN 2 PRECEDING AND CURRENT ROW define un marco de 3 filas: las 2 anteriores más la actual. AVG sobre ese marco calcula el promedio móvil de los últimos 3 meses. Técnica estándar para suavizar series temporales.",
+  },
+  // Q9
+  {
+    category: "c05 — Window Functions avanzadas",
+    question:
+      "¿Para qué sirve LAG() en una window function y qué caso de uso típico resuelve?",
+    options: [
+      "Para asignar un número de fila único dentro de cada partición",
+      "Para acceder al valor de la fila anterior en el ordenamiento, permitiendo calcular variaciones o diferencias entre períodos",
+      "Para obtener el valor máximo dentro de cada grupo sin colapsarlo",
+      "Para contar cuántas filas existen antes de la fila actual",
+    ],
+    correct: 1,
+    explanation:
+      "LAG(columna) OVER (ORDER BY ...) devuelve el valor de la columna en la fila anterior según el orden definido. El caso de uso típico es calcular la variación entre períodos: ventas - LAG(ventas) OVER (ORDER BY mes) AS variacion_mensual.",
+  },
+  // Q10
+  {
+    category: "c05 — JSONB avanzado",
+    question:
+      "Tenés una columna atributos JSONB con miles de registros. Una query usa WHERE atributos @> '{\"ram\": 16}' y hace Seq Scan. ¿Cómo la optimizarías?",
+    options: [
+      "Índice B-tree sobre la columna atributos completa",
+      "Índice HASH sobre atributos para búsquedas de igualdad exacta",
+      "Índice GIN sobre atributos: es el tipo que soporta el operador @> en JSONB",
+      "No se puede indexar JSONB; hay que extraer el campo a una columna normal",
+    ],
+    correct: 2,
+    explanation:
+      "El operador @> requiere un índice GIN (Generalized Inverted Index). Con CREATE INDEX idx ON productos USING GIN(atributos), la query pasa de Seq Scan a Bitmap Index Scan, reduciendo dramáticamente el tiempo de respuesta.",
+  },
+  // Q11
+  {
+    category: "c05 — CTEs avanzadas",
+    question:
+      "¿Cuál es la ventaja principal de encadenar múltiples CTEs (WITH cte1 AS (...), cte2 AS (...)) frente a subconsultas anidadas?",
+    options: [
+      "Las CTEs encadenadas siempre son más rápidas porque el optimizador las paraleliza",
+      "Las CTEs mejoran la legibilidad al nombrar cada paso intermedio, facilitando debug y mantenimiento",
+      "Las CTEs evitan que la subconsulta se evalúe más de una vez en cualquier escenario",
+      "Las CTEs permiten hacer COMMIT parcial entre cada paso de la cadena",
+    ],
+    correct: 1,
+    explanation:
+      "La principal ventaja es la legibilidad y mantenibilidad: cada paso tiene un nombre descriptivo, el query se lee de arriba a abajo como una secuencia lógica, y es fácil debuggear ejecutando cada CTE por separado. En cuanto a performance, PostgreSQL decide si materializar o no según el optimizador.",
+  },
+  // Q12
+  {
+    category: "c06 — Lógica en DB vs aplicación",
+    question:
+      "Tenés una regla: 'un usuario no puede comprar si tiene más de 3 deudas vencidas'. ¿Dónde debería vivir esta lógica según las recomendaciones del curso?",
+    options: [
+      "En un trigger BEFORE INSERT en la tabla compras, para garantizarla a nivel motor",
+      "En un stored procedure, porque puede hacer COMMIT/ROLLBACK según el resultado",
+      "En la aplicación, porque es lógica de negocio compleja: testeable, versionable y debuggeable",
+      "En un CHECK constraint, porque es la forma más eficiente de validar datos",
+    ],
+    correct: 2,
+    explanation:
+      "Las reglas de negocio complejas van en la aplicación: son testeables con unit tests, versionadas en git junto al código, y debuggeables en logs. Los triggers y constraints son para integridad estructural (PK, FK, NOT NULL, unicidad), no para workflows de negocio.",
+  },
+  // Q13
+  {
+    category: "c06 — Funciones avanzadas",
+    question:
+      "¿Cuál es la diferencia entre una función tabular (RETURNS TABLE) y una vista en PostgreSQL?",
+    options: [
+      "No hay diferencia; ambas son equivalentes en todos los contextos",
+      "Las funciones tabulares pueden recibir parámetros y contener lógica condicional; las vistas son queries fijas sin parámetros",
+      "Las vistas son más eficientes porque se materializan automáticamente",
+      "Las funciones tabulares solo funcionan con PL/pgSQL; las vistas solo con SQL puro",
+    ],
+    correct: 1,
+    explanation:
+      "Una función tabular puede recibir parámetros (como cliente_id) y contener lógica condicional en PL/pgSQL. Una vista es una query fija reutilizable pero sin parámetros ni lógica dinámica. Se usan en contextos distintos.",
+  },
+  // Q14
+  {
+    category: "c07 — Transacciones y concurrencia",
+    question:
+      "¿Cuál es la anomalía de concurrencia donde dos transacciones leen un valor, cada una lo modifica basándose en el valor leído, y la segunda escritura sobreescribe a la primera sin ver su cambio?",
+    options: [
+      "Dirty Read: una transacción lee datos no confirmados de otra",
+      "Phantom Read: una query devuelve filas distintas al repetirse en la misma transacción",
+      "Lost Update: la actualización de una transacción es sobreescrita por otra sin ver su cambio",
+      "Non-repeatable Read: el mismo SELECT devuelve resultados distintos en la misma transacción",
+    ],
+    correct: 2,
+    explanation:
+      "Lost Update ocurre cuando dos transacciones concurrentes leen un valor (ej: stock=10), cada una calcula su versión (10-3=7 y 10-2=8), y la segunda escritura (stock=8) sobreescribe a la primera (stock=7), perdiendo efectivamente el descuento de la primera transacción.",
+  },
+  // Q15
+  {
+    category: "c07 — Niveles de aislamiento",
+    question:
+      "¿Cuál es el nivel de aislamiento por defecto en PostgreSQL, y qué anomalía de concurrencia NO protege?",
+    options: [
+      "SERIALIZABLE — protege contra todo pero es el más restrictivo",
+      "READ UNCOMMITTED — el más permisivo, permite dirty reads",
+      "READ COMMITTED (default) — protege contra dirty reads pero no contra non-repeatable reads ni phantom reads",
+      "REPEATABLE READ — protege contra dirty reads y non-repeatable reads pero no phantom reads",
+    ],
+    correct: 2,
+    explanation:
+      "READ COMMITTED es el nivel por defecto en PostgreSQL. Protege contra Dirty Reads (nunca ves datos no confirmados) pero no contra Non-repeatable Reads ni Phantom Reads. Para eliminar estas últimas se necesita REPEATABLE READ o SERIALIZABLE.",
+  },
+  // Q16
+  {
+    category: "c07 — Transacciones avanzadas",
+    question:
+      "¿Por qué SELECT ... FOR UPDATE SKIP LOCKED es la solución correcta para implementar una job queue con múltiples workers concurrentes en PostgreSQL?",
+    options: [
+      "Porque SKIP LOCKED es más rápido que FOR UPDATE en tablas grandes",
+      "Porque FOR UPDATE bloquea la fila y SKIP LOCKED hace que otros workers la salteen en lugar de esperarla, garantizando que cada job se procese exactamente una vez",
+      "Porque evita tener que usar COMMIT al final de la transacción del worker",
+      "Porque permite que múltiples workers tomen el mismo job y el primero en terminar gana",
+    ],
+    correct: 1,
+    explanation:
+      "FOR UPDATE bloquea la fila seleccionada para el worker actual. SKIP LOCKED hace que los demás workers no esperen esa fila sino que la salteen y tomen la siguiente disponible. Resultado: cada job es procesado exactamente una vez, sin colisiones ni deadlocks.",
+  },
+  // Q17
+  {
+    category: "c07 — WAL",
+    question:
+      "El WAL (Write-Ahead Log) de PostgreSQL garantiza durabilidad. ¿Qué otro caso de uso moderno está directamente basado en el WAL?",
+    options: [
+      "La ejecución de índices GIN para búsquedas en JSONB",
+      "Las window functions de tipo ROWS BETWEEN UNBOUNDED PRECEDING",
+      "CDC (Change Data Capture) y replicación lógica: leer el WAL como stream de eventos para propagar cambios en tiempo real a otros sistemas",
+      "La evaluación de CHECK constraints en tiempo de INSERT",
+    ],
+    correct: 2,
+    explanation:
+      "El WAL es la base del CDC y la replicación lógica. Herramientas como Supabase Realtime, Debezium y pglogical leen el WAL como stream de cambios para propagar INSERT/UPDATE/DELETE en tiempo real a WebSockets, Kafka, Elasticsearch u otros sistemas.",
+  },
+  // Q18
+  {
+    category: "c07 — Deadlocks",
+    question:
+      "Dos transacciones concurrentes acceden a las cuentas ID=1 e ID=2 en orden inverso y producen un deadlock. ¿Cuál es la estrategia de prevención más simple y efectiva?",
+    options: [
+      "Usar SERIALIZABLE como nivel de aislamiento en ambas transacciones",
+      "Hacer COMMIT después de cada UPDATE individual para liberar los locks rápidamente",
+      "Siempre acceder a los recursos en el mismo orden predefinido en todas las transacciones",
+      "Usar FOR UPDATE NOWAIT para fallar rápido y reintentar desde la aplicación",
+    ],
+    correct: 2,
+    explanation:
+      "La prevención más simple es establecer un orden canónico de acceso: siempre bloquear la cuenta con ID menor primero. Si todas las transacciones respetan el mismo orden, ninguna puede crear un ciclo de espera. NOWAIT es una alternativa válida pero más compleja de manejar en la aplicación.",
+  },
+  // Q19
+  {
+    category: "c07 — WAL y recuperación",
+    question:
+      "¿Qué es Point-in-Time Recovery (PITR) y qué lo hace posible en PostgreSQL?",
+    options: [
+      "Una técnica para hacer ROLLBACK de una transacción específica por su ID",
+      "La capacidad de restaurar la base de datos a cualquier momento exacto del pasado, usando un snapshot base más el WAL archivado",
+      "Un mecanismo para replicar datos entre dos instancias de PostgreSQL en tiempo real",
+      "La función de autoguardado que PostgreSQL hace cada 5 minutos por defecto",
+    ],
+    correct: 1,
+    explanation:
+      "PITR permite restaurar la base a cualquier instante específico del pasado. Requiere un backup base (snapshot) más el WAL archivado (stream de todos los cambios desde ese snapshot). Plataformas como Supabase y Neon lo ofrecen desde su dashboard sin configuración manual.",
+  },
+  // Q20
+  {
+    category: "c06 — Triggers avanzados",
+    question:
+      "Tenés un trigger AFTER INSERT en la tabla pedidos que actualiza un contador en la tabla clientes. Ese UPDATE en clientes dispara otro trigger. ¿Cuál es el problema y cómo se llama este patrón?",
+    options: [
+      "Se llama trigger recursivo y PostgreSQL lo bloquea automáticamente",
+      "Se llaman triggers en cadena (cascading triggers). El problema es que son difíciles de debuggear, pueden generar comportamiento inesperado y degradar la performance",
+      "No hay problema: PostgreSQL garantiza que el segundo trigger no se ejecute si fue disparado por otro trigger",
+      "Se llama trigger circular y PostgreSQL emite un warning pero continúa ejecutando",
+    ],
+    correct: 1,
+    explanation:
+      "Los triggers en cadena (cascading triggers) ocurren cuando un trigger dispara una operación que activa otro trigger. Son difíciles de debuggear porque el comportamiento no es evidente leyendo el código, pueden crear cadenas largas e inesperadas de efectos, y degradan significativamente la performance en operaciones masivas.",
+  },
+];
+
+const baseDatosNormalQuiz: Quiz = {
+  id: "base-datos-normal",
+  subject: "Bases de Datos",
+  title: "Bases de Datos — Conceptos",
+  subtitle: "SQL, normalización, constraints, funciones y transacciones",
+  emoji: "🗄️",
+  color: "var(--azul)",
+  accentColor: "var(--verde-claro)",
+  topics: [
+    "Intro SQL",
+    "Normalización",
+    "BCNF / 4FN",
+    "Constraints",
+    "CTEs y Window Functions",
+    "Funciones y Procedures",
+    "Transacciones",
+  ],
+  normal: baseDatosNormal,
+  hard: baseDatosHard,
+};
+
+const baseDatosAvanzadoQuiz: Quiz = {
+  id: "base-datos-avanzado",
+  subject: "Bases de Datos",
+  title: "Bases de Datos — Desafío",
+  subtitle: "Análisis profundo, concurrencia y casos de producción",
+  emoji: "🧠",
+  color: "var(--violeta)",
+  accentColor: "var(--dorado)",
+  topics: [
+    "Estandarización SQL",
+    "Normalización avanzada",
+    "BCNF / 4FN",
+    "Constraints avanzados",
+    "Window Functions y JSONB",
+    "Funciones vs Procedures",
+    "Transacciones y concurrencia",
+    "WAL y deadlocks",
+  ],
+  normal: baseDatosAvanzado,
+  hard: [],
+};
+
+// ---------------------------------------------------------------------------
 // Exported collection
 // ---------------------------------------------------------------------------
 
@@ -683,6 +1595,8 @@ export const quizzes: Quiz[] = [
   ecosistemasQuiz,
   techBasicoQuiz,
   techAvanzadoQuiz,
+  baseDatosNormalQuiz,
+  baseDatosAvanzadoQuiz,
 ];
 
 // ---------------------------------------------------------------------------
