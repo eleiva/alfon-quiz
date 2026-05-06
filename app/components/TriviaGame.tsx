@@ -1009,7 +1009,9 @@ export default function TriviaGame() {
         <div className="q-num">
           Pregunta {current + 1} de {total}
         </div>
-        <div className="question-text">{q.question}</div>
+        <div className="question-text" style={{ whiteSpace: "pre-wrap" }}>
+          {q.question}
+        </div>
 
         {/* Options */}
         <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
@@ -1027,19 +1029,44 @@ export default function TriviaGame() {
               }
             }
 
+            // Detect SQL code blocks (contain newlines + SQL keywords)
+            const isSqlBlock =
+              opt.includes("\n") &&
+              /SELECT|FROM|WHERE|JOIN|WITH|GROUP|HAVING|ORDER/i.test(opt);
+
             return (
               <button
                 key={i}
                 className={`option-btn${extraClass ? ` ${extraClass}` : ""}`}
                 disabled={answered}
                 onClick={() => selectOption(i)}
+                style={isSqlBlock ? { alignItems: "flex-start" } : undefined}
               >
                 <span
                   className={`option-letter${letterExtra ? ` ${letterExtra}` : ""}`}
+                  style={isSqlBlock ? { marginTop: 2 } : undefined}
                 >
                   {LETTERS[i]}
                 </span>
-                {opt}
+                {isSqlBlock ? (
+                  <pre
+                    style={{
+                      margin: 0,
+                      fontFamily: "'Space Mono', 'Courier New', monospace",
+                      fontSize: 11,
+                      lineHeight: 1.6,
+                      whiteSpace: "pre-wrap",
+                      wordBreak: "break-word",
+                      textAlign: "left",
+                      color: "inherit",
+                      flex: 1,
+                    }}
+                  >
+                    {opt}
+                  </pre>
+                ) : (
+                  opt
+                )}
               </button>
             );
           })}

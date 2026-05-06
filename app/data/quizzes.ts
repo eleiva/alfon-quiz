@@ -1603,111 +1603,136 @@ const bd2Quiz: Quiz = {
   id: "bd2",
   subject: "Bases de Datos II",
   title: "Parcial · Bases de Datos II",
-  subtitle: "Sección A: multiple choice · Sección B: completá el término",
+  subtitle: "Sección A: 15 múltiple choice · Sección B: completá el término",
   emoji: "🗄️",
   color: "var(--azul-claro)",
   accentColor: "var(--violeta)",
   topics: [
     "Normalización",
     "Dependencias funcionales",
-    "Triggers",
+    "Anomalías",
+    "Constraints e integridad",
+    "Subconsultas",
     "Window Functions",
-    "Transacciones ACID",
+    "Triggers",
     "Stored Procedures",
-    "Claves y constraints",
+    "Transacciones ACID",
   ],
   normal: [
+    // Q1
     {
       category: "Normalización",
       question:
-        "Una tabla tiene la clave compuesta (pedido_id, producto_id). El atributo cliente_nombre depende solo de pedido_id. ¿Qué tipo de dependencia es?",
-      options: [
-        "Transitiva",
-        "Parcial — la clave completa no es necesaria",
-        "Multivaluada",
-        "Trivial",
-      ],
+        "Una tabla tiene la clave compuesta (turno_id, medico_id). El atributo paciente_nombre depende solo de turno_id. Esto es una dependencia:",
+      options: ["Transitiva", "Parcial", "Multivaluada", "Trivial"],
       correct: 1,
       explanation:
-        "Es una dependencia PARCIAL: cliente_nombre depende solo de una parte de la clave compuesta (pedido_id), no de la clave completa. Esto viola la 2FN.",
+        "Es una dependencia PARCIAL: paciente_nombre depende solo de una parte de la clave compuesta (turno_id), no de la clave completa (turno_id, medico_id). Esto viola la 2FN.",
     },
+    // Q2
     {
       category: "Normalización",
       question:
-        "Separar cliente_ciudad a una tabla CLIENTES para eliminar que cliente_id → cliente_ciudad exista en FACTURAS es llevar el esquema a...",
-      options: ["1FN", "2FN", "3FN — elimina dependencia transitiva", "BCNF"],
+        "Una tabla FACTURA(factura_id, cliente_id, cliente_ciudad, item_id, descripcion, precio) donde cliente_id → cliente_ciudad y factura_id → cliente_id. ¿Qué forma normal viola?",
+      options: [
+        "1FN — hay atributos no atómicos",
+        "2FN — hay una dependencia parcial",
+        "3FN — hay una dependencia transitiva",
+        "No viola ninguna",
+      ],
       correct: 2,
       explanation:
-        "Es 3FN: se elimina la dependencia transitiva (cliente_ciudad depende de cliente_id que no es clave de FACTURAS). La 3FN exige que todo atributo dependa directamente de la clave primaria.",
+        "Viola la 3FN: cliente_ciudad depende de cliente_id (no de la PK factura_id). La cadena factura_id → cliente_id → cliente_ciudad es una dependencia transitiva. La 3FN exige que todo atributo dependa directamente de la clave primaria.",
     },
+    // Q3
     {
       category: "Anomalías",
-      question: "¿Cuál de estas describe una anomalía de INSERCIÓN?",
+      question: "¿Cuál de estas situaciones es una anomalía de INSERCIÓN?",
       options: [
-        "Actualizar el nombre de una ciudad obliga a modificar 800 filas",
-        "Al borrar el último pedido de un cliente se pierde su teléfono",
-        "No se puede registrar un nuevo proveedor sin ingresar al menos un producto",
-        "Un NOT NULL impide insertar una fila con datos incompletos",
-      ],
-      correct: 2,
-      explanation:
-        "La anomalía de inserción ocurre cuando no podés agregar datos sin depender de otros datos que no corresponden. No poder registrar un proveedor sin un producto es el ejemplo clásico.",
-    },
-    {
-      category: "Integridad referencial",
-      question: "ON DELETE CASCADE en una FK significa que...",
-      options: [
-        "No se puede eliminar el padre si tiene hijos",
-        "Al eliminar el padre, los hijos quedan con NULL",
-        "Al eliminar el padre, los hijos se eliminan automáticamente",
-        "Los hijos heredan el valor por defecto",
-      ],
-      correct: 2,
-      explanation:
-        "CASCADE propaga la eliminación: si borrás el registro padre, todos los registros hijos con esa FK también se eliminan automáticamente.",
-    },
-    {
-      category: "Constraints",
-      question: "¿Cuál es la diferencia principal entre UNIQUE y PRIMARY KEY?",
-      options: [
-        "PRIMARY KEY acepta NULLs; UNIQUE no",
-        "UNIQUE acepta NULLs; PRIMARY KEY no admite NULLs y es única por tabla",
-        "Son idénticos, solo difieren en nombre",
-        "PRIMARY KEY permite duplicados en tablas grandes",
+        "Al borrar el último pedido de un cliente, se pierde su dirección de envío",
+        "Para registrar un nuevo proveedor hay que ingresar al menos un producto, aunque el proveedor aún no tenga productos",
+        "Cambiar el nombre de una ciudad obliga a actualizar 500 filas",
+        "Un constraint NOT NULL impide insertar una fila incompleta",
       ],
       correct: 1,
       explanation:
-        "UNIQUE garantiza unicidad pero permite NULLs (múltiples filas pueden tener NULL). PRIMARY KEY = UNIQUE + NOT NULL, y solo puede haber una por tabla.",
+        "La anomalía de inserción ocurre cuando no podés agregar un dato sin que existan otros relacionados. No poder registrar un proveedor sin un producto es el ejemplo clásico.",
     },
+    // Q4
+    {
+      category: "Integridad referencial",
+      question: "ON DELETE RESTRICT en una FK significa:",
+      options: [
+        "Al eliminar el padre, los hijos se eliminan también",
+        "Al eliminar el padre, los hijos quedan con NULL",
+        "No se puede eliminar el padre si tiene hijos — el motor lanza un error",
+        "Al eliminar el padre, los hijos adoptan el valor por defecto",
+      ],
+      correct: 2,
+      explanation:
+        "RESTRICT impide el borrado del padre si existen registros hijos que referencian esa clave. El motor lanza un error antes de ejecutar el DELETE.",
+    },
+    // Q5
+    {
+      category: "Constraints",
+      question: "¿Cuál es la diferencia entre UNIQUE y PRIMARY KEY?",
+      options: [
+        "PRIMARY KEY puede tener NULLs; UNIQUE no",
+        "UNIQUE puede tener NULLs (uno por columna en PostgreSQL); PRIMARY KEY no admite NULLs y es única por tabla",
+        "Son idénticos, solo difieren en el nombre",
+        "PRIMARY KEY permite duplicados si la tabla tiene muchas filas",
+      ],
+      correct: 1,
+      explanation:
+        "UNIQUE garantiza unicidad pero permite NULLs. PRIMARY KEY = UNIQUE + NOT NULL, y solo puede haber una por tabla.",
+    },
+    // Q6
     {
       category: "Subconsultas",
-      question: "EXISTS (SELECT 1 FROM ...) devuelve...",
+      question:
+        "Una subconsulta en el FROM (también llamada derived table o inline view):",
+      options: [
+        "Se re-ejecuta por cada fila de la consulta exterior",
+        "Se evalúa una sola vez y su resultado se trata como una tabla temporal",
+        "Solo puede devolver una columna",
+        "No puede usarse junto con JOIN",
+      ],
+      correct: 1,
+      explanation:
+        "Una derived table en el FROM se evalúa una sola vez y actúa como tabla temporal. El optimizador puede decidir materializarla o integrarla (inline) según el plan de ejecución.",
+    },
+    // Q7
+    {
+      category: "Subconsultas",
+      question: "EXISTS (SELECT 1 FROM ...) devuelve:",
       options: [
         "El primer valor de la subconsulta",
-        "La cantidad de filas que retorna la subconsulta",
-        "TRUE si la subconsulta devuelve al menos 1 fila, FALSE si no",
-        "TRUE solo si devuelve exactamente 1 fila",
+        "La cantidad de filas que devuelve la subconsulta",
+        "TRUE si la subconsulta devuelve al menos una fila, FALSE si no devuelve ninguna",
+        "TRUE solo si la subconsulta devuelve exactamente una fila",
       ],
       correct: 2,
       explanation:
         "EXISTS evalúa si la subconsulta retorna al menos una fila. No importa el valor — por eso se usa SELECT 1 para eficiencia. Retorna TRUE o FALSE.",
     },
+    // Q8
     {
       category: "Window Functions",
       question: "¿Para qué sirve una window function en SQL?",
       options: [
-        "Filtra filas antes del GROUP BY",
-        "Calcula un valor por fila usando un conjunto de filas relacionadas, sin eliminar filas del resultado",
-        "Ejecuta una función sobre cada tabla en una ventana de tiempo",
-        "Reemplaza JOINs cuando se consultan varias tablas",
+        "Para filtrar filas antes de que se aplique el GROUP BY",
+        "Para calcular un valor por fila usando un conjunto de filas relacionadas, sin eliminar filas del resultado",
+        "Para ejecutar una función sobre cada tabla en una ventana de tiempo determinada",
+        "Para reemplazar los JOINs cuando se consultan varias tablas a la vez",
       ],
       correct: 1,
       explanation:
         "Las window functions calculan sobre una 'ventana' de filas relacionadas sin colapsar el resultado como GROUP BY. Permiten rankings, acumulados, promedios móviles, etc.",
     },
+    // Q9
     {
       category: "Triggers",
-      question: "Un trigger BEFORE UPDATE FOR EACH ROW puede...",
+      question: "Un trigger BEFORE UPDATE FOR EACH ROW puede:",
       options: [
         "Modificar los valores de NEW antes de que se escriban en la tabla",
         "Solo leer NEW y OLD, no modificarlos",
@@ -1718,32 +1743,153 @@ const bd2Quiz: Quiz = {
       explanation:
         "En un BEFORE trigger podés modificar NEW antes de que se persista. Es útil para validaciones y transformaciones automáticas de datos.",
     },
+    // Q10
     {
       category: "Stored Procedures",
       question:
-        "Un stored procedure en PostgreSQL se diferencia de una function en que...",
+        "Un stored procedure en PostgreSQL se diferencia de una function en que:",
       options: [
         "El procedure es más rápido porque no retorna valores",
-        "El procedure puede ejecutar COMMIT y ROLLBACK; la function no puede",
-        "La function solo puede usarse con triggers",
+        "El procedure puede ejecutar COMMIT y ROLLBACK internamente; la function no puede",
+        "La function solo puede usarse con triggers; el procedure con cualquier operación",
         "No hay diferencia práctica en PostgreSQL moderno",
       ],
       correct: 1,
       explanation:
-        "La diferencia clave: los stored procedures pueden controlar transacciones (COMMIT, ROLLBACK). Las functions corren dentro de la transacción del llamador y no pueden emitir COMMIT/ROLLBACK.",
+        "La diferencia clave: los stored procedures pueden controlar transacciones (COMMIT, ROLLBACK). Las functions corren dentro de la transacción del llamador.",
     },
+    // Q11
+    {
+      category: "Transacciones ACID",
+      question:
+        "BEGIN; UPDATE ...; UPDATE ...; COMMIT; — si el segundo UPDATE viola un CHECK constraint:",
+      options: [
+        "El primer UPDATE queda confirmado, el segundo no",
+        "Ambos UPDATEs se revierten — ninguno tiene efecto",
+        "Solo el segundo UPDATE falla, el primero sigue en la base",
+        "PostgreSQL hace COMMIT automático del primer UPDATE antes de fallar",
+      ],
+      correct: 1,
+      explanation:
+        "Las transacciones son atómicas: todo o nada. Si el segundo UPDATE falla, la transacción queda en estado abortado y al hacer ROLLBACK (o al detectar el error) ambos cambios se deshacen.",
+    },
+    // Q12
     {
       category: "ACID",
-      question: "La propiedad ACID de Consistencia garantiza que...",
+      question: "La propiedad ACID de CONSISTENCIA garantiza que:",
       options: [
         "Las transacciones se ejecutan sin interferencia entre sí",
         "Los cambios confirmados sobreviven a fallos de hardware",
-        "La DB pasa de un estado válido a otro estado válido — los constraints nunca quedan violados",
-        "Todas las operaciones ocurren o ninguna ocurre",
+        "La base de datos pasa de un estado válido a otro estado válido — los constraints nunca quedan violados al finalizar una transacción",
+        "Todas las operaciones de una transacción ocurren o ninguna ocurre",
       ],
       correct: 2,
       explanation:
         "Consistencia: la DB siempre pasa de un estado válido a otro. Ninguna transacción puede dejar la base en un estado que viole las reglas de integridad definidas.",
+    },
+    // Q13
+    {
+      category: "Transacciones ACID",
+      question: "ROLLBACK TO SAVEPOINT sp1:",
+      options: [
+        "Termina la transacción y deshace todo desde el BEGIN",
+        "Deshace solo los cambios posteriores a SAVEPOINT sp1 y mantiene la transacción abierta",
+        "Es equivalente a ROLLBACK completo",
+        "Confirma los cambios hasta sp1 y descarta los posteriores",
+      ],
+      correct: 1,
+      explanation:
+        "ROLLBACK TO SAVEPOINT vuelve al estado del savepoint sin terminar la transacción. Los cambios anteriores al savepoint se preservan; los posteriores se deshacen.",
+    },
+    // Q14
+    {
+      category: "Stored Procedures",
+      question:
+        "¿Cuál de las siguientes es una razón válida para usar un stored procedure en lugar de SQL directo desde la aplicación?",
+      options: [
+        "Los stored procedures son siempre más rápidos que el SQL enviado por la app",
+        "Permiten encapsular lógica compleja de negocio con manejo de errores y transacciones en la base, reutilizable desde múltiples clientes",
+        "Son obligatorios para operaciones con más de 3 tablas",
+        "Evitan la necesidad de usar índices",
+      ],
+      correct: 1,
+      explanation:
+        "Los procedures encapsulan lógica de negocio, manejo de errores y control transaccional directamente en la BD, haciéndola reutilizable desde cualquier cliente.",
+    },
+    // Q15
+    {
+      category: "Triggers",
+      question:
+        "Tenés este trigger:\nCREATE OR REPLACE FUNCTION validar_stock()\nRETURNS TRIGGER AS $$\nBEGIN\n    IF NEW.stock < 0 THEN\n        RAISE EXCEPTION 'Stock no puede ser negativo';\n    END IF;\n    RETURN NEW;\nEND;\n$$ LANGUAGE plpgsql;\n\nCREATE TRIGGER chk_stock\nBEFORE INSERT OR UPDATE ON productos\nFOR EACH ROW EXECUTE FUNCTION validar_stock();\n\nAhora ejecutás: UPDATE productos SET stock = -5 WHERE producto_id = 1;\n¿Qué ocurre?",
+      options: [
+        "El UPDATE se ejecuta y luego se lanza el error",
+        "El UPDATE se cancela y se lanza el error 'Stock no puede ser negativo'",
+        "El trigger no se dispara porque es un UPDATE, no un INSERT",
+        "RETURN NEW confirma el UPDATE aunque el stock sea negativo",
+      ],
+      correct: 1,
+      explanation:
+        "El trigger es BEFORE, así que se ejecuta antes del UPDATE. Como NEW.stock = -5 < 0, RAISE EXCEPTION cancela la operación y PostgreSQL lanza el error. El dato nunca se persiste.",
+    },
+    // Q16
+    {
+      category: "SQL — Streaming",
+      question:
+        "Tenés estas tablas:\nartistas(artista_id, nombre, pais, genero)\ncanciones(cancion_id, artista_id, titulo, duracion_seg, anio)\nescuchas(escucha_id, cancion_id, usuario_id, fecha)\n\nEscribí una consulta que liste los artistas con al menos una canción que tenga más de 100 escuchas. Mostrar nombre, pais y total_escuchas. Ordenar por total_escuchas DESC.\n\n¿Cuál de estas queries es correcta?",
+      options: [
+        "SELECT a.nombre, a.pais, COUNT(*) AS total_escuchas\nFROM artistas a\nJOIN canciones c ON a.artista_id = c.artista_id\nJOIN escuchas e ON c.cancion_id = e.cancion_id\nGROUP BY a.artista_id, a.nombre, a.pais\nORDER BY total_escuchas DESC;",
+        "SELECT a.nombre, a.pais, COUNT(e.escucha_id) AS total_escuchas\nFROM artistas a\nJOIN canciones c ON a.artista_id = c.artista_id\nJOIN escuchas e ON c.cancion_id = e.cancion_id\nGROUP BY a.artista_id, a.nombre, a.pais\nHAVING COUNT(e.escucha_id) > 100\nORDER BY total_escuchas DESC;",
+        "SELECT a.nombre, a.pais, COUNT(*) AS total_escuchas\nFROM artistas a\nJOIN canciones c ON a.artista_id = c.artista_id\nJOIN escuchas e ON c.cancion_id = e.cancion_id\nWHERE total_escuchas > 100\nGROUP BY a.artista_id, a.nombre, a.pais\nORDER BY total_escuchas DESC;",
+        "SELECT a.nombre, a.pais, COUNT(*) AS total_escuchas\nFROM artistas a\nJOIN escuchas e ON a.artista_id = e.cancion_id\nGROUP BY a.artista_id\nHAVING total_escuchas > 100\nORDER BY total_escuchas DESC;",
+      ],
+      correct: 1,
+      explanation:
+        "La opción B es correcta. Clave: (1) HAVING filtra grupos después del GROUP BY — no se puede usar WHERE con aliases agregados; (2) el JOIN correcto es artistas→canciones→escuchas; (3) se agrupa por artista_id para no duplicar si hay homónimos. La opción A no tiene HAVING. La opción C usa WHERE con alias (inválido). La D hace JOIN incorrecto entre artista_id y cancion_id.",
+    },
+    // Q17 — ya existente, se mantiene
+    {
+      category: "SQL — Streaming",
+      question:
+        "Usando las mismas tablas (artistas, canciones, escuchas), escribí una CTE que encuentre el artista con más escuchas por género. Columnas: genero, nombre, total_escuchas.\n\n¿Cuál de estas queries es correcta?",
+      options: [
+        "WITH escuchas_por_artista AS (\n  SELECT a.genero, a.nombre,\n         COUNT(e.escucha_id) AS total_escuchas\n  FROM artistas a\n  JOIN canciones c ON a.artista_id = c.artista_id\n  JOIN escuchas e ON c.cancion_id = e.cancion_id\n  GROUP BY a.genero, a.artista_id, a.nombre\n)\nSELECT genero, nombre, total_escuchas\nFROM escuchas_por_artista\nORDER BY total_escuchas DESC;",
+        "WITH escuchas_por_artista AS (\n  SELECT a.genero, a.nombre,\n         COUNT(e.escucha_id) AS total_escuchas\n  FROM artistas a\n  JOIN canciones c ON a.artista_id = c.artista_id\n  JOIN escuchas e ON c.cancion_id = e.cancion_id\n  GROUP BY a.genero, a.artista_id, a.nombre\n),\nmax_por_genero AS (\n  SELECT genero, MAX(total_escuchas) AS max_escuchas\n  FROM escuchas_por_artista\n  GROUP BY genero\n)\nSELECT e.genero, e.nombre, e.total_escuchas\nFROM escuchas_por_artista e\nJOIN max_por_genero m\n  ON e.genero = m.genero\n  AND e.total_escuchas = m.max_escuchas\nORDER BY e.genero;",
+        "WITH top_genero AS (\n  SELECT a.genero, a.nombre,\n         COUNT(*) AS total_escuchas,\n         ROW_NUMBER() OVER (PARTITION BY a.genero ORDER BY COUNT(*) DESC) AS rn\n  FROM artistas a\n  JOIN canciones c ON a.artista_id = c.artista_id\n  JOIN escuchas e ON c.cancion_id = e.cancion_id\n  GROUP BY a.genero, a.artista_id, a.nombre\n)\nSELECT genero, nombre, total_escuchas\nFROM top_genero\nWHERE rn = 1\nORDER BY genero;",
+        "WITH escuchas_genero AS (\n  SELECT a.genero, MAX(COUNT(*)) AS total_escuchas\n  FROM artistas a\n  JOIN escuchas e ON a.artista_id = e.escucha_id\n  GROUP BY a.genero\n)\nSELECT genero, nombre, total_escuchas\nFROM escuchas_genero;",
+      ],
+      correct: 1,
+      explanation:
+        "La opción B es correcta: usa dos CTEs — la primera calcula total por artista, la segunda obtiene el máximo por género — y el JOIN final cruza ambas para quedarse con el artista que iguale ese máximo. La opción A no filtra por género. La C es también correcta técnicamente (usa ROW_NUMBER en una sola CTE) pero el enunciado pide explicitamente una CTE clásica. La D usa MAX(COUNT(*)) que es inválido y hace un JOIN incorrecto.",
+    },
+    // Q18
+    {
+      category: "SQL — Transacciones",
+      question:
+        "Problema 3a) Un sistema bancario ejecuta una transferencia entre cuentas:\n1. Verificar saldo suficiente en cuenta origen\n2. Descontar monto de cuenta origen\n3. Acreditar monto en cuenta destino\n4. Registrar en tabla movimientos\n\nTablas: cuentas(cuenta_id, saldo) y movimientos\n\n¿Cuál de estos bloques ejecuta la transferencia de forma CORRECTA y atómica?",
+      options: [
+        "-- Opción A\nUPDATE cuentas SET saldo = saldo - 500 WHERE cuenta_id = 1;\nUPDATE cuentas SET saldo = saldo + 500 WHERE cuenta_id = 2;\nINSERT INTO movimientos(origen, destino, monto) VALUES (1, 2, 500);\nCOMMIT;",
+        "-- Opción B\nBEGIN;\n  IF (SELECT saldo FROM cuentas WHERE cuenta_id = 1) < 500 THEN\n    RAISE EXCEPTION 'Saldo insuficiente';\n  END IF;\n  UPDATE cuentas SET saldo = saldo - 500 WHERE cuenta_id = 1;\n  UPDATE cuentas SET saldo = saldo + 500 WHERE cuenta_id = 2;\n  INSERT INTO movimientos(origen, destino, monto) VALUES (1, 2, 500);\nCOMMIT;",
+        "-- Opción C\nBEGIN;\n  UPDATE cuentas SET saldo = saldo - 500 WHERE cuenta_id = 1;\n  UPDATE cuentas SET saldo = saldo + 500 WHERE cuenta_id = 2;\n  INSERT INTO movimientos(origen, destino, monto) VALUES (1, 2, 500);\nROLLBACK;",
+        "-- Opción D\nBEGIN;\n  UPDATE cuentas SET saldo = saldo - 500 WHERE cuenta_id = 1;\nCOMMIT;\n  UPDATE cuentas SET saldo = saldo + 500 WHERE cuenta_id = 2;\n  INSERT INTO movimientos(origen, destino, monto) VALUES (1, 2, 500);\nCOMMIT;",
+      ],
+      correct: 1,
+      explanation:
+        "La opción B es correcta: (1) usa BEGIN para abrir la transacción; (2) verifica el saldo ANTES de operar y lanza RAISE EXCEPTION si es insuficiente — lo que cancela todo automáticamente; (3) ejecuta ambos UPDATEs y el INSERT dentro del mismo bloque atómico; (4) cierra con COMMIT solo si todo anduvo bien.\n\nLa A no tiene BEGIN ni validación de saldo. La C termina con ROLLBACK — deshace todo siempre. La D hace un COMMIT en el medio — rompe la atomicidad: si falla el segundo UPDATE, el dinero ya salió pero no llegó.",
+    },
+    // Q19
+    {
+      category: "SQL — Transacciones",
+      question:
+        "Problema 3b) El servidor se cae justo después de que PostgreSQL ejecutó COMMIT en la transferencia.\n\n¿Qué propiedad ACID garantiza que la transferencia igual persiste? ¿Cómo la implementa PostgreSQL?",
+      options: [
+        "Atomicidad — PostgreSQL garantiza que si el COMMIT se ejecutó, la transacción completa quedó guardada en RAM hasta el próximo inicio.",
+        "Durabilidad — PostgreSQL escribe los cambios en el WAL (Write-Ahead Log) antes de confirmar el COMMIT. Al reiniciar, reproduce el WAL para recuperar las transacciones confirmadas.",
+        "Consistencia — PostgreSQL valida todos los constraints antes del COMMIT y guarda una copia del estado válido en disco.",
+        "Aislamiento — PostgreSQL usa MVCC para que otras transacciones vean los datos confirmados incluso si el servidor reinicia.",
+      ],
+      correct: 1,
+      explanation:
+        "Es DURABILIDAD (la D de ACID). PostgreSQL la implementa con el WAL (Write-Ahead Log): antes de confirmar el COMMIT, registra todos los cambios en un log secuencial en disco. Si el servidor cae justo después del COMMIT, al reiniciar PostgreSQL reproduce el WAL y restaura exactamente el estado confirmado. Sin WAL, un corte de luz posterior al COMMIT podría perder los datos que estaban solo en memoria.",
     },
   ],
   hard: [],

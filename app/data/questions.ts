@@ -22,7 +22,7 @@ export const bd2SectionB: FillQuestion[] = [
     id: 1,
     category: "Normalización",
     question:
-      "🔄 Llevar una tabla a 3FN eliminando dependencias transitivas moviendo atributos a su propia tabla se llama:",
+      "🔄 Llevar una tabla a 3FN eliminando dependencias transitivas moviendo atributos a su propia tabla se llama:\n💡 Pista: empieza con N, tiene 14 letras.",
     answer: "Normalización",
     acceptedAnswers: [
       "normalización",
@@ -31,31 +31,31 @@ export const bd2SectionB: FillQuestion[] = [
       "3fn",
       "tercera forma normal",
     ],
-    hint: "Es el proceso general de eliminar redundancias dividiendo en tablas — específicamente aquí llegar a 3FN.",
+    hint: "Es el proceso de organizar las tablas de una BD eliminando redundancias y dependencias no deseadas. Tiene 14 letras: N-O-R-M-A-L-I-Z-A-C-I-Ó-N.",
   },
   {
     id: 2,
     category: "Window Functions",
     question:
-      "📊 La window function que accede al valor de la fila ANTERIOR según un orden definido se llama:",
-    answer: "LAG",
-    acceptedAnswers: ["lag", "lag()"],
-    hint: "LAG() accede a la fila anterior en la ventana. Su opuesta es LEAD() que mira la siguiente fila.",
+      "🪟 En SQL, la cláusula que define el conjunto de filas sobre las que opera una window function se escribe: OVER (______ BY columna)\n💡 Pista: es la misma palabra que se usa para dividir grupos en GROUP BY — 3 letras.",
+    answer: "PARTITION",
+    acceptedAnswers: ["partition", "partition by"],
+    hint: "OVER (PARTITION BY columna ORDER BY ...) — PARTITION divide el resultado en grupos para que la window function opere dentro de cada uno. 9 letras: P-A-R-T-I-T-I-O-N.",
   },
   {
     id: 3,
     category: "Triggers",
     question:
-      "⚡ En PostgreSQL, la variable especial que representa el estado de la fila ANTES de un UPDATE en un trigger se llama:",
+      "⚡ En PostgreSQL, la variable especial que representa el estado de la fila ANTES de un UPDATE en un trigger se llama:\n💡 Pista: 3 letras, antónimo de NEW.",
     answer: "OLD",
     acceptedAnswers: ["old", "old record", "old."],
-    hint: "OLD contiene los valores anteriores al cambio. NEW contiene los nuevos valores.",
+    hint: "OLD contiene los valores anteriores al cambio. NEW contiene los nuevos valores que se van a escribir. 3 letras: O-L-D.",
   },
   {
     id: 4,
     category: "Transacciones",
     question:
-      "💾 El comando que deshace parcialmente una transacción hasta un punto marcado, sin cerrar la transacción, es:",
+      "💾 El comando que deshace parcialmente una transacción hasta un punto marcado, SIN cerrar la transacción, es:\n💡 Pista: empieza con ROLLBACK, tiene 3 palabras.",
     answer: "ROLLBACK TO SAVEPOINT",
     acceptedAnswers: [
       "rollback to savepoint",
@@ -63,13 +63,13 @@ export const bd2SectionB: FillQuestion[] = [
       "savepoint",
       "rollback to sp",
     ],
-    hint: "SAVEPOINT marca un punto intermedio. ROLLBACK TO SAVEPOINT vuelve a ese punto sin deshacer toda la transacción.",
+    hint: "SAVEPOINT marca un punto intermedio. ROLLBACK TO SAVEPOINT vuelve a ese punto sin deshacer toda la transacción. La sintaxis completa tiene 3 palabras.",
   },
   {
     id: 5,
     category: "ACID",
     question:
-      "🔒 La propiedad ACID que garantiza que dos transacciones concurrentes NO se ven entre sí hasta que hacen COMMIT se llama:",
+      "🔒 La propiedad ACID que garantiza que dos transacciones concurrentes NO se ven entre sí hasta que hacen COMMIT se llama:\n💡 Pista: empieza con A, 11 letras, es la I de ACID.",
     answer: "Aislamiento",
     acceptedAnswers: [
       "aislamiento",
@@ -78,7 +78,51 @@ export const bd2SectionB: FillQuestion[] = [
       "aislación",
       "i de acid",
     ],
-    hint: "La I de ACID: Isolation / Aislamiento. Garantiza que transacciones concurrentes no interfieren entre sí.",
+    hint: "La I de ACID: Isolation / Aislamiento. Las transacciones no se ven entre sí hasta el COMMIT. 11 letras: A-I-S-L-A-M-I-E-N-T-O.",
+  },
+  {
+    id: 6,
+    category: "Normalización — Problema 1",
+    question:
+      "🏗️ Problema 1a) La tabla TURNO(turno_id, paciente_id, paciente_nombre, paciente_tel, medico_id, medico_nombre, especialidad, fecha, hora, consultorio, duracion_min, estado) tiene como dependencias: paciente_id → paciente_nombre, paciente_tel  y  medico_id → medico_nombre, especialidad. Estos atributos NO dependen directamente de la PK (turno_id). ¿En qué Forma Normal está? Escribí: 1FN, 2FN o 3FN.\n💡 Pista: hay dependencias transitivas (atributos que dependen de un no-clave), eso viola la _FN.",
+    answer: "1FN",
+    acceptedAnswers: ["1fn", "primera forma normal", "1° fn", "primera fn"],
+    hint: "Está en 1FN: los datos son atómicos y hay PK, pero existen dependencias transitivas (paciente_nombre depende de paciente_id, no de turno_id). Eso viola la 3FN — el esquema actual solo cumple 1FN.",
+  },
+  {
+    id: 7,
+    category: "Normalización — Problema 1",
+    question:
+      "🗑️ Problema 1b) Si se borra el único turno del paciente P001 de la tabla TURNO, se pierden para siempre su nombre y teléfono. ¿Cómo se llama este tipo de anomalía? Elegí la opción correcta.\nA) Anomalía de actualización\nB) Anomalía de borrado\nC) Anomalía de inserción\nD) Inconsistencia referencial\n💡 Pista: la operación que causó el problema fue un DELETE — 6 letras, empieza con B.",
+    answer: "B",
+    acceptedAnswers: [
+      "b",
+      "anomalía de borrado",
+      "anomalia de borrado",
+      "borrado",
+      "eliminación",
+      "anomalía de eliminación",
+      "delete anomaly",
+    ],
+    hint: "Es una anomalía de BORRADO (delete anomaly): al eliminar el único turno de un paciente, se pierde información del paciente que no debería estar en esa tabla. La solución es separar PACIENTES en su propia tabla.",
+  },
+  {
+    id: 8,
+    category: "Normalización — Problema 1",
+    question:
+      "📐 Problema 1c) Al descomponer TURNO en 3FN, obtenemos 3 tablas. Completá los nombres separados por comas (en cualquier orden):\n💡 Pista: una tabla por cada entidad independiente — paciente, médico, y el turno en sí.",
+    answer: "TURNOS, PACIENTES, MEDICOS",
+    acceptedAnswers: [
+      "turnos, pacientes, medicos",
+      "turnos, pacientes, médicos",
+      "pacientes, medicos, turnos",
+      "pacientes, médicos, turnos",
+      "turno, paciente, medico",
+      "turno, paciente, médico",
+      "turno paciente medico",
+      "pacientes medicos turnos",
+    ],
+    hint: "3 tablas: PACIENTES(paciente_id PK, nombre, tel) · MEDICOS(medico_id PK, nombre, especialidad) · TURNOS(turno_id PK, paciente_id FK, medico_id FK, fecha, hora, consultorio, duracion_min, estado). Cada tabla tiene una sola entidad y sus atributos dependen solo de su PK.",
   },
 ];
 
