@@ -9,13 +9,20 @@ import {
 import { quizzes, getQuizById } from "@/app/data/quizzes";
 import { useSound } from "@/app/hooks/useSound";
 import QuizCatalog from "@/app/components/QuizCatalog";
+import FillSection from "@/app/components/FillSection";
 import { type LeaderboardEntry } from "@/app/components/QuizCatalog";
 import PersonalityTest from "@/app/components/PersonalityTest";
 import { shareResultWhatsApp } from "@/app/components/PersonalityTest";
 
 export type { LeaderboardEntry };
 
-type Phase = "welcome" | "catalog" | "game" | "results" | "personality";
+type Phase =
+  | "welcome"
+  | "catalog"
+  | "game"
+  | "fill"
+  | "results"
+  | "personality";
 
 const LETTERS = ["A", "B", "C", "D"];
 
@@ -63,6 +70,8 @@ export default function TriviaGame() {
   const [lbQuizFilter, setLbQuizFilter] = useState<string>("all");
   const [savedEntry, setSavedEntry] = useState<LeaderboardEntry | null>(null);
   const [saving, setSaving] = useState(false);
+  const [fillScore, setFillScore] = useState(0);
+  const [fillTotal, setFillTotal] = useState(0);
   const nameInputRef = useRef<HTMLInputElement>(null);
   const { playCorrect, playWrong } = useSound();
 
@@ -131,21 +140,31 @@ export default function TriviaGame() {
 
   const nextQuestion = useCallback(() => {
     if (current + 1 >= deck.length) {
-      setPhase("results");
+      const quiz = getQuizById(selectedQuizId);
+      if (
+        quiz?.hasFill &&
+        quiz.fillQuestions &&
+        quiz.fillQuestions.length > 0
+      ) {
+        setPhase("fill");
+      } else {
+        setPhase("results");
+      }
     } else {
       setCurrent((c) => c + 1);
       setAnswered(false);
       setSelected(null);
     }
-  }, [current, deck.length]);
+  }, [current, deck.length, selectedQuizId]);
 
   // Save to DB when results screen mounts (only once per game)
   useEffect(() => {
     if (phase !== "results" || savedEntry || saving) return;
-    const total = deck.length;
-    if (total === 0) return;
+    const totalTotal = deck.length + fillTotal;
+    if (totalTotal === 0) return;
 
-    const pct = Math.round((score / total) * 100);
+    const totalScore = score + fillScore;
+    const pct = Math.round((totalScore / totalTotal) * 100);
     setSaving(true);
 
     fetch("/api/leaderboard", {
@@ -154,8 +173,8 @@ export default function TriviaGame() {
       body: JSON.stringify({
         name: playerName.trim() || "Anónimo",
         emoji: playerEmoji,
-        score,
-        total,
+        score: totalScore,
+        total: totalTotal,
         difficulty,
         pct,
         quiz_id: selectedQuizId,
@@ -666,10 +685,33 @@ export default function TriviaGame() {
     );
   }
 
+  /* ── FILL SECTION ──────────────────────────────────────────── */
+  if (phase === "fill") {
+    const quiz = getQuizById(selectedQuizId);
+    return (
+      <FillSection
+        questions={quiz?.fillQuestions ?? []}
+        playerName={playerName}
+        playerEmoji={playerEmoji}
+        quizTitle={quiz?.title ?? ""}
+        mcScore={score}
+        mcTotal={deck.length}
+        onComplete={(fs, ft) => {
+          setFillScore(fs);
+          setFillTotal(ft);
+          setPhase("results");
+        }}
+        onBack={() => setPhase("catalog")}
+      />
+    );
+  }
+
   /* ── RESULTS ─────────────────────────────────────────────── */
   if (phase === "results") {
-    const total = deck.length;
-    const pct = Math.round((score / total) * 100);
+    const totalScore = score + fillScore;
+    const totalTotal = deck.length + fillTotal;
+    const pct =
+      totalTotal > 0 ? Math.round((totalScore / totalTotal) * 100) : 0;
     const activeQuiz = getQuizById(selectedQuizId);
     let emoji: string, title: string, msg: string;
     if (pct === 100) {
@@ -738,11 +780,46 @@ export default function TriviaGame() {
             </p>
           )}
           <div className="results-title">{title}</div>
-          <div className="results-score">
-            {score}/{total}
-          </div>
+          {fillTotal > 0 ? (
+            <>
+              <div
+                style={{
+                  display: "flex",
+                  gap: 8,
+                  flexWrap: "wrap",
+                  justifyContent: "center",
+                }}
+              >
+                <div className="score-pill">
+                  🅰️ <span>Sección A:</span>{" "}
+                  <span
+                    className="score-num"
+                    style={{ color: "var(--verde-claro)" }}
+                  >
+                    {score}/{deck.length}
+                  </span>
+                </div>
+                <div className="score-pill">
+                  🅱️ <span>Sección B:</span>{" "}
+                  <span
+                    className="score-num"
+                    style={{ color: "var(--azul-claro)" }}
+                  >
+                    {fillScore}/{fillTotal}
+                  </span>
+                </div>
+              </div>
+              <div className="results-score">
+                {totalScore}/{totalTotal}
+              </div>
+            </>
+          ) : (
+            <div className="results-score">
+              {score}/{deck.length}
+            </div>
+          )}
           <div style={{ color: "var(--gris)", fontSize: 13, marginBottom: 2 }}>
-            respuestas correctas de {total} · {pct}%
+            respuestas correctas de {totalTotal} · {pct}%
           </div>
 
           {rank !== null && rank > 0 && (
@@ -794,9 +871,9 @@ export default function TriviaGame() {
                   playerName,
                   playerEmoji,
                   quiz?.title ?? "Trivia",
-                  score,
-                  deck.length,
-                  Math.round((score / deck.length) * 100),
+                  totalScore,
+                  totalTotal,
+                  pct,
                   difficulty,
                 );
               }}

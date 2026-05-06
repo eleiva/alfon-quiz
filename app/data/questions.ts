@@ -8,6 +8,80 @@ export type Question = {
 
 export type Difficulty = "normal" | "hard";
 
+export type FillQuestion = {
+  id: number;
+  category: string;
+  question: string; // the prompt text
+  answer: string; // canonical correct answer
+  acceptedAnswers: string[]; // all accepted variants (lowercase, trimmed)
+  hint: string; // shown after answering
+};
+
+export const bd2SectionB: FillQuestion[] = [
+  {
+    id: 1,
+    category: "Normalización",
+    question:
+      "🔄 Llevar una tabla a 3FN eliminando dependencias transitivas moviendo atributos a su propia tabla se llama:",
+    answer: "Normalización",
+    acceptedAnswers: [
+      "normalización",
+      "normalizacion",
+      "normalizar",
+      "3fn",
+      "tercera forma normal",
+    ],
+    hint: "Es el proceso general de eliminar redundancias dividiendo en tablas — específicamente aquí llegar a 3FN.",
+  },
+  {
+    id: 2,
+    category: "Window Functions",
+    question:
+      "📊 La window function que accede al valor de la fila ANTERIOR según un orden definido se llama:",
+    answer: "LAG",
+    acceptedAnswers: ["lag", "lag()"],
+    hint: "LAG() accede a la fila anterior en la ventana. Su opuesta es LEAD() que mira la siguiente fila.",
+  },
+  {
+    id: 3,
+    category: "Triggers",
+    question:
+      "⚡ En PostgreSQL, la variable especial que representa el estado de la fila ANTES de un UPDATE en un trigger se llama:",
+    answer: "OLD",
+    acceptedAnswers: ["old", "old record", "old."],
+    hint: "OLD contiene los valores anteriores al cambio. NEW contiene los nuevos valores.",
+  },
+  {
+    id: 4,
+    category: "Transacciones",
+    question:
+      "💾 El comando que deshace parcialmente una transacción hasta un punto marcado, sin cerrar la transacción, es:",
+    answer: "ROLLBACK TO SAVEPOINT",
+    acceptedAnswers: [
+      "rollback to savepoint",
+      "rollback to",
+      "savepoint",
+      "rollback to sp",
+    ],
+    hint: "SAVEPOINT marca un punto intermedio. ROLLBACK TO SAVEPOINT vuelve a ese punto sin deshacer toda la transacción.",
+  },
+  {
+    id: 5,
+    category: "ACID",
+    question:
+      "🔒 La propiedad ACID que garantiza que dos transacciones concurrentes NO se ven entre sí hasta que hacen COMMIT se llama:",
+    answer: "Aislamiento",
+    acceptedAnswers: [
+      "aislamiento",
+      "isolation",
+      "isolación",
+      "aislación",
+      "i de acid",
+    ],
+    hint: "La I de ACID: Isolation / Aislamiento. Garantiza que transacciones concurrentes no interfieren entre sí.",
+  },
+];
+
 export const questions: Question[] = [
   {
     // Q1 — correct originally index 1 → placed at index 1

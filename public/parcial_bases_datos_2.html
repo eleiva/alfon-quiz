@@ -1,0 +1,678 @@
+
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800&family=Space+Mono:wght@400;700&display=swap');
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body-wrap {
+    display: block;
+    font-family: 'Syne', sans-serif;
+    color: var(--color-text-primary);
+    padding: 0 0 2rem;
+  }
+
+  .header {
+    background: var(--color-background-secondary);
+    border-bottom: 2px solid var(--color-border-primary);
+    padding: 1.5rem 1.5rem 1rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .header-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+    margin-top: 1rem;
+    font-size: 13px;
+  }
+
+  .header-field {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    border-bottom: 1.5px solid var(--color-border-primary);
+    padding-bottom: 4px;
+  }
+
+  .header-field span { color: var(--color-text-secondary); font-size: 12px; }
+
+  .title-band {
+    font-family: 'Syne', sans-serif;
+    font-size: 22px;
+    font-weight: 800;
+    letter-spacing: -0.5px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .subtitle {
+    font-size: 12px;
+    color: var(--color-text-secondary);
+    margin-top: 4px;
+    font-family: 'Space Mono', monospace;
+  }
+
+  .section {
+    padding: 0 1.5rem;
+    margin-bottom: 2rem;
+  }
+
+  .section-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 1rem;
+    padding-bottom: 8px;
+    border-bottom: 1.5px solid var(--color-border-primary);
+  }
+
+  .section-tag {
+    font-family: 'Space Mono', monospace;
+    font-size: 10px;
+    font-weight: 700;
+    background: var(--color-text-primary);
+    color: var(--color-background-primary);
+    padding: 3px 8px;
+    border-radius: 4px;
+    letter-spacing: 1px;
+  }
+
+  .section-title {
+    font-size: 15px;
+    font-weight: 700;
+  }
+
+  .pts-badge {
+    margin-left: auto;
+    font-family: 'Space Mono', monospace;
+    font-size: 11px;
+    color: var(--color-text-secondary);
+    background: var(--color-background-secondary);
+    border: 0.5px solid var(--color-border-secondary);
+    padding: 2px 8px;
+    border-radius: 4px;
+  }
+
+  .question-block {
+    margin-bottom: 1.25rem;
+    padding: 1rem;
+    border: 0.5px solid var(--color-border-tertiary);
+    border-radius: var(--border-radius-lg);
+    background: var(--color-background-primary);
+  }
+
+  .question-stem {
+    font-size: 13.5px;
+    line-height: 1.5;
+    margin-bottom: 0.75rem;
+    display: flex;
+    gap: 8px;
+  }
+
+  .q-num {
+    font-family: 'Space Mono', monospace;
+    font-size: 12px;
+    font-weight: 700;
+    min-width: 22px;
+    color: var(--color-text-secondary);
+    padding-top: 1px;
+  }
+
+  .options-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 6px;
+    padding-left: 30px;
+  }
+
+  .option {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    font-size: 12.5px;
+    line-height: 1.4;
+    padding: 6px 8px;
+    border: 0.5px solid var(--color-border-tertiary);
+    border-radius: var(--border-radius-md);
+    cursor: pointer;
+    transition: background 0.1s, border-color 0.1s;
+    background: var(--color-background-secondary);
+    user-select: none;
+  }
+
+  .option:hover {
+    border-color: var(--color-border-secondary);
+    background: var(--color-background-primary);
+  }
+
+  .option.selected {
+    border-color: var(--color-border-primary);
+    background: var(--color-background-primary);
+  }
+
+  .checkbox {
+    width: 16px;
+    height: 16px;
+    min-width: 16px;
+    border: 1.5px solid var(--color-border-primary);
+    border-radius: 3px;
+    margin-top: 1px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 11px;
+    transition: all 0.1s;
+    background: var(--color-background-primary);
+  }
+
+  .option.selected .checkbox {
+    background: var(--color-text-primary);
+    border-color: var(--color-text-primary);
+    color: var(--color-background-primary);
+  }
+
+  .option-label {
+    font-family: 'Space Mono', monospace;
+    font-size: 10px;
+    font-weight: 700;
+    color: var(--color-text-secondary);
+    min-width: 14px;
+  }
+
+  .fill-block {
+    margin-bottom: 1rem;
+    padding: 0.75rem 1rem;
+    border: 0.5px solid var(--color-border-tertiary);
+    border-radius: var(--border-radius-lg);
+    background: var(--color-background-primary);
+    display: flex;
+    gap: 10px;
+    align-items: flex-start;
+  }
+
+  .fill-num {
+    font-family: 'Space Mono', monospace;
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--color-text-secondary);
+    min-width: 22px;
+    padding-top: 2px;
+  }
+
+  .fill-content { flex: 1; }
+
+  .fill-text {
+    font-size: 13px;
+    line-height: 1.5;
+    margin-bottom: 8px;
+  }
+
+  .fill-line {
+    border-bottom: 1.5px solid var(--color-border-primary);
+    min-width: 200px;
+    height: 22px;
+    display: inline-block;
+    width: 60%;
+  }
+
+  .dev-block {
+    padding: 1rem;
+    border: 0.5px solid var(--color-border-tertiary);
+    border-radius: var(--border-radius-lg);
+    background: var(--color-background-primary);
+    margin-bottom: 1.25rem;
+  }
+
+  .dev-stem {
+    font-size: 13.5px;
+    line-height: 1.55;
+    margin-bottom: 0.75rem;
+    display: flex;
+    gap: 8px;
+  }
+
+  .dev-num {
+    font-family: 'Space Mono', monospace;
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--color-text-secondary);
+    min-width: 22px;
+    padding-top: 2px;
+  }
+
+  .answer-lines {
+    padding-left: 30px;
+  }
+
+  .answer-line {
+    border-bottom: 1px dashed var(--color-border-secondary);
+    height: 28px;
+    margin-bottom: 4px;
+  }
+
+  .code-block {
+    font-family: 'Space Mono', monospace;
+    font-size: 11px;
+    line-height: 1.5;
+    background: var(--color-background-secondary);
+    border: 0.5px solid var(--color-border-secondary);
+    border-radius: var(--border-radius-md);
+    padding: 10px 12px;
+    margin: 8px 0 8px 30px;
+    white-space: pre;
+    overflow-x: auto;
+    color: var(--color-text-primary);
+  }
+
+  .schema-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    font-family: 'Space Mono', monospace;
+    font-size: 10px;
+    background: var(--color-background-secondary);
+    border: 0.5px solid var(--color-border-secondary);
+    border-radius: 20px;
+    padding: 3px 8px;
+    margin: 3px 3px 3px 0;
+    color: var(--color-text-secondary);
+  }
+
+  .schema-pill strong {
+    font-weight: 700;
+    color: var(--color-text-primary);
+  }
+
+  .sub-q {
+    font-size: 13px;
+    font-weight: 700;
+    margin: 10px 0 5px 30px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .sub-pts {
+    font-family: 'Space Mono', monospace;
+    font-size: 10px;
+    color: var(--color-text-secondary);
+    font-weight: 400;
+    background: var(--color-background-secondary);
+    padding: 1px 6px;
+    border-radius: 4px;
+    border: 0.5px solid var(--color-border-tertiary);
+  }
+
+  .score-bar {
+    display: flex;
+    gap: 12px;
+    padding: 0 1.5rem;
+    margin-bottom: 1.5rem;
+    flex-wrap: wrap;
+  }
+
+  .score-cell {
+    flex: 1;
+    min-width: 120px;
+    padding: 0.75rem 1rem;
+    border: 0.5px solid var(--color-border-tertiary);
+    border-radius: var(--border-radius-lg);
+    background: var(--color-background-secondary);
+    text-align: center;
+  }
+
+  .score-label {
+    font-size: 11px;
+    color: var(--color-text-secondary);
+    margin-bottom: 6px;
+  }
+
+  .score-box {
+    border-bottom: 2px solid var(--color-border-primary);
+    height: 28px;
+    margin: 0 auto;
+    width: 60px;
+  }
+
+  .score-total {
+    font-family: 'Space Mono', monospace;
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--color-text-secondary);
+    margin-top: 4px;
+  }
+
+  .tip-banner {
+    margin: 0 1.5rem 1.5rem;
+    padding: 10px 14px;
+    border-left: 3px solid var(--color-border-primary);
+    font-size: 12px;
+    color: var(--color-text-secondary);
+    background: var(--color-background-secondary);
+    border-radius: 0 var(--border-radius-md) var(--border-radius-md) 0;
+    font-family: 'Space Mono', monospace;
+    line-height: 1.6;
+  }
+</style>
+
+<body-wrap>
+  <div class="header">
+    <div class="title-band">
+      🗄️ Parcial — Bases de Datos II
+    </div>
+    <div class="subtitle">// Instituto Integral Católico &nbsp;|&nbsp; 45 min &nbsp;|&nbsp; 60 pts total</div>
+    <div class="header-grid">
+      <div class="header-field"><span>✏️ Alumno/a:</span> <div style="flex:1; border-bottom: 1.5px solid var(--color-border-primary); height:20px;"></div></div>
+      <div class="header-field"><span>📅 Fecha:</span> <div style="flex:1; border-bottom: 1.5px solid var(--color-border-primary); height:20px;"></div></div>
+      <div class="header-field"><span>🎓 Curso:</span> <div style="flex:1; border-bottom: 1.5px solid var(--color-border-primary); height:20px;"></div></div>
+      <div class="header-field"><span>✅ Nota:</span> <div style="flex:1; border-bottom: 1.5px solid var(--color-border-primary); height:20px;"></div></div>
+    </div>
+  </div>
+
+  <div class="tip-banner">
+    💡 Hacé clic en los cuadraditos para marcar tu respuesta. &nbsp;|&nbsp; Leé cada pregunta completa antes de responder. &nbsp;|&nbsp; No dejes preguntas en blanco — siempre hay puntos parciales.
+  </div>
+
+  <div class="score-bar">
+    <div class="score-cell"><div class="score-label">🅰️ Múltiple choice</div><div class="score-box"></div><div class="score-total">/ 20 pts</div></div>
+    <div class="score-cell"><div class="score-label">🅱️ Completá</div><div class="score-box"></div><div class="score-total">/ 10 pts</div></div>
+    <div class="score-cell"><div class="score-label">🅲 Desarrollo</div><div class="score-box"></div><div class="score-total">/ 30 pts</div></div>
+    <div class="score-cell" style="border: 1.5px solid var(--color-border-primary);"><div class="score-label">🏁 Total</div><div class="score-box"></div><div class="score-total">/ 60 pts</div></div>
+  </div>
+
+  <!-- SECTION A -->
+  <div class="section">
+    <div class="section-header">
+      <span class="section-tag">SECCIÓN A</span>
+      <span class="section-title">🧩 Múltiple choice</span>
+      <span class="pts-badge">20 pts · 2 pts c/u</span>
+    </div>
+
+    <!-- Q1 -->
+    <div class="question-block">
+      <div class="question-stem">
+        <span class="q-num">01</span>
+        <span>Una tabla tiene la clave compuesta <code style="font-family:'Space Mono',monospace;font-size:11px;background:var(--color-background-secondary);padding:1px 5px;border-radius:3px;">(pedido_id, producto_id)</code>. El atributo <code style="font-family:'Space Mono',monospace;font-size:11px;background:var(--color-background-secondary);padding:1px 5px;border-radius:3px;">cliente_nombre</code> depende solo de <code style="font-family:'Space Mono',monospace;font-size:11px;background:var(--color-background-secondary);padding:1px 5px;border-radius:3px;">pedido_id</code>. ¿Qué tipo de dependencia es? 🔑</span>
+      </div>
+      <div class="options-grid" data-q="1">
+        <div class="option" onclick="pick(this)"><div class="checkbox"></div><span class="option-label">A</span> Transitiva</div>
+        <div class="option" onclick="pick(this)"><div class="checkbox"></div><span class="option-label">B</span> Parcial ← la clave completa no es necesaria</div>
+        <div class="option" onclick="pick(this)"><div class="checkbox"></div><span class="option-label">C</span> Multivaluada</div>
+        <div class="option" onclick="pick(this)"><div class="checkbox"></div><span class="option-label">D</span> Trivial</div>
+      </div>
+    </div>
+
+    <!-- Q2 -->
+    <div class="question-block">
+      <div class="question-stem">
+        <span class="q-num">02</span>
+        <span>Separar <code style="font-family:'Space Mono',monospace;font-size:11px;background:var(--color-background-secondary);padding:1px 5px;border-radius:3px;">cliente_ciudad</code> a una tabla <code style="font-family:'Space Mono',monospace;font-size:11px;background:var(--color-background-secondary);padding:1px 5px;border-radius:3px;">CLIENTES</code> para eliminar que <code style="font-family:'Space Mono',monospace;font-size:11px;background:var(--color-background-secondary);padding:1px 5px;border-radius:3px;">cliente_id → cliente_ciudad</code> exista en <code style="font-family:'Space Mono',monospace;font-size:11px;background:var(--color-background-secondary);padding:1px 5px;border-radius:3px;">FACTURAS</code> es llevar el esquema a... 🏗️</span>
+      </div>
+      <div class="options-grid" data-q="2">
+        <div class="option" onclick="pick(this)"><div class="checkbox"></div><span class="option-label">A</span> 1FN</div>
+        <div class="option" onclick="pick(this)"><div class="checkbox"></div><span class="option-label">B</span> 2FN</div>
+        <div class="option" onclick="pick(this)"><div class="checkbox"></div><span class="option-label">C</span> 3FN ← elimina dependencia transitiva</div>
+        <div class="option" onclick="pick(this)"><div class="checkbox"></div><span class="option-label">D</span> BCNF</div>
+      </div>
+    </div>
+
+    <!-- Q3 -->
+    <div class="question-block">
+      <div class="question-stem">
+        <span class="q-num">03</span>
+        <span>¿Cuál de estas describe una <strong>anomalía de inserción</strong>? 🚨</span>
+      </div>
+      <div class="options-grid" data-q="3">
+        <div class="option" onclick="pick(this)"><div class="checkbox"></div><span class="option-label">A</span> Actualizar el nombre de una ciudad obliga a modificar 800 filas</div>
+        <div class="option" onclick="pick(this)"><div class="checkbox"></div><span class="option-label">B</span> Al borrar el último pedido de un cliente se pierde su teléfono</div>
+        <div class="option" onclick="pick(this)"><div class="checkbox"></div><span class="option-label">C</span> No se puede registrar un nuevo proveedor sin ingresar al menos un producto</div>
+        <div class="option" onclick="pick(this)"><div class="checkbox"></div><span class="option-label">D</span> Un NOT NULL impide insertar una fila con datos incompletos</div>
+      </div>
+    </div>
+
+    <!-- Q4 -->
+    <div class="question-block">
+      <div class="question-stem">
+        <span class="q-num">04</span>
+        <span><code style="font-family:'Space Mono',monospace;font-size:11px;background:var(--color-background-secondary);padding:1px 5px;border-radius:3px;">ON DELETE CASCADE</code> en una FK significa que... 🗑️</span>
+      </div>
+      <div class="options-grid" data-q="4">
+        <div class="option" onclick="pick(this)"><div class="checkbox"></div><span class="option-label">A</span> No se puede eliminar el padre si tiene hijos</div>
+        <div class="option" onclick="pick(this)"><div class="checkbox"></div><span class="option-label">B</span> Al eliminar el padre, los hijos quedan con NULL</div>
+        <div class="option" onclick="pick(this)"><div class="checkbox"></div><span class="option-label">C</span> Al eliminar el padre, los hijos se eliminan automáticamente</div>
+        <div class="option" onclick="pick(this)"><div class="checkbox"></div><span class="option-label">D</span> Los hijos heredan el valor por defecto</div>
+      </div>
+    </div>
+
+    <!-- Q5 -->
+    <div class="question-block">
+      <div class="question-stem">
+        <span class="q-num">05</span>
+        <span>¿Cuál es la diferencia principal entre <code style="font-family:'Space Mono',monospace;font-size:11px;background:var(--color-background-secondary);padding:1px 5px;border-radius:3px;">UNIQUE</code> y <code style="font-family:'Space Mono',monospace;font-size:11px;background:var(--color-background-secondary);padding:1px 5px;border-radius:3px;">PRIMARY KEY</code>? 🔑</span>
+      </div>
+      <div class="options-grid" data-q="5">
+        <div class="option" onclick="pick(this)"><div class="checkbox"></div><span class="option-label">A</span> PRIMARY KEY acepta NULLs; UNIQUE no</div>
+        <div class="option" onclick="pick(this)"><div class="checkbox"></div><span class="option-label">B</span> UNIQUE acepta NULLs; PRIMARY KEY no admite NULLs y es única por tabla</div>
+        <div class="option" onclick="pick(this)"><div class="checkbox"></div><span class="option-label">C</span> Son idénticos, solo difieren en nombre</div>
+        <div class="option" onclick="pick(this)"><div class="checkbox"></div><span class="option-label">D</span> PRIMARY KEY permite duplicados en tablas grandes</div>
+      </div>
+    </div>
+
+    <!-- Q6 -->
+    <div class="question-block">
+      <div class="question-stem">
+        <span class="q-num">06</span>
+        <span><code style="font-family:'Space Mono',monospace;font-size:11px;background:var(--color-background-secondary);padding:1px 5px;border-radius:3px;">EXISTS (SELECT 1 FROM ...)</code> devuelve... 🧮</span>
+      </div>
+      <div class="options-grid" data-q="6">
+        <div class="option" onclick="pick(this)"><div class="checkbox"></div><span class="option-label">A</span> El primer valor de la subconsulta</div>
+        <div class="option" onclick="pick(this)"><div class="checkbox"></div><span class="option-label">B</span> La cantidad de filas que retorna la subconsulta</div>
+        <div class="option" onclick="pick(this)"><div class="checkbox"></div><span class="option-label">C</span> TRUE si la subconsulta devuelve al menos 1 fila, FALSE si no</div>
+        <div class="option" onclick="pick(this)"><div class="checkbox"></div><span class="option-label">D</span> TRUE solo si devuelve exactamente 1 fila</div>
+      </div>
+    </div>
+
+    <!-- Q7 -->
+    <div class="question-block">
+      <div class="question-stem">
+        <span class="q-num">07</span>
+        <span>¿Para qué sirve una <strong>window function</strong> en SQL? 🪟</span>
+      </div>
+      <div class="options-grid" data-q="7">
+        <div class="option" onclick="pick(this)"><div class="checkbox"></div><span class="option-label">A</span> Filtra filas antes del GROUP BY</div>
+        <div class="option" onclick="pick(this)"><div class="checkbox"></div><span class="option-label">B</span> Calcula un valor por fila usando un conjunto de filas relacionadas, sin eliminar filas del resultado</div>
+        <div class="option" onclick="pick(this)"><div class="checkbox"></div><span class="option-label">C</span> Ejecuta una función sobre cada tabla en una ventana de tiempo</div>
+        <div class="option" onclick="pick(this)"><div class="checkbox"></div><span class="option-label">D</span> Reemplaza JOINs cuando se consultan varias tablas</div>
+      </div>
+    </div>
+
+    <!-- Q8 -->
+    <div class="question-block">
+      <div class="question-stem">
+        <span class="q-num">08</span>
+        <span>Un trigger <code style="font-family:'Space Mono',monospace;font-size:11px;background:var(--color-background-secondary);padding:1px 5px;border-radius:3px;">BEFORE UPDATE FOR EACH ROW</code> puede... ⚡</span>
+      </div>
+      <div class="options-grid" data-q="8">
+        <div class="option" onclick="pick(this)"><div class="checkbox"></div><span class="option-label">A</span> Modificar los valores de NEW antes de que se escriban en la tabla</div>
+        <div class="option" onclick="pick(this)"><div class="checkbox"></div><span class="option-label">B</span> Solo leer NEW y OLD, no modificarlos</div>
+        <div class="option" onclick="pick(this)"><div class="checkbox"></div><span class="option-label">C</span> Cancelar el UPDATE devolviendo OLD en lugar de NEW</div>
+        <div class="option" onclick="pick(this)"><div class="checkbox"></div><span class="option-label">D</span> Hacer COMMIT dentro del trigger</div>
+      </div>
+    </div>
+
+    <!-- Q9 -->
+    <div class="question-block">
+      <div class="question-stem">
+        <span class="q-num">09</span>
+        <span>Un stored procedure en PostgreSQL se diferencia de una function en que... 📦</span>
+      </div>
+      <div class="options-grid" data-q="9">
+        <div class="option" onclick="pick(this)"><div class="checkbox"></div><span class="option-label">A</span> El procedure es más rápido porque no retorna valores</div>
+        <div class="option" onclick="pick(this)"><div class="checkbox"></div><span class="option-label">B</span> El procedure puede ejecutar COMMIT y ROLLBACK; la function no puede</div>
+        <div class="option" onclick="pick(this)"><div class="checkbox"></div><span class="option-label">C</span> La function solo puede usarse con triggers</div>
+        <div class="option" onclick="pick(this)"><div class="checkbox"></div><span class="option-label">D</span> No hay diferencia práctica en PostgreSQL moderno</div>
+      </div>
+    </div>
+
+    <!-- Q10 -->
+    <div class="question-block">
+      <div class="question-stem">
+        <span class="q-num">10</span>
+        <span>La propiedad ACID de <strong>Consistencia</strong> garantiza que... 🛡️</span>
+      </div>
+      <div class="options-grid" data-q="10">
+        <div class="option" onclick="pick(this)"><div class="checkbox"></div><span class="option-label">A</span> Las transacciones se ejecutan sin interferencia entre sí</div>
+        <div class="option" onclick="pick(this)"><div class="checkbox"></div><span class="option-label">B</span> Los cambios confirmados sobreviven a fallos de hardware</div>
+        <div class="option" onclick="pick(this)"><div class="checkbox"></div><span class="option-label">C</span> La DB pasa de un estado válido a otro estado válido — los constraints nunca quedan violados</div>
+        <div class="option" onclick="pick(this)"><div class="checkbox"></div><span class="option-label">D</span> Todas las operaciones ocurren o ninguna ocurre</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SECTION B -->
+  <div class="section">
+    <div class="section-header">
+      <span class="section-tag">SECCIÓN B</span>
+      <span class="section-title">✏️ Completá el término</span>
+      <span class="pts-badge">10 pts · 2 pts c/u</span>
+    </div>
+
+    <div class="fill-block">
+      <span class="fill-num">01</span>
+      <div class="fill-content">
+        <div class="fill-text">🔄 Llevar una tabla a <strong>3FN</strong> eliminando dependencias transitivas moviendo atributos a su propia tabla se llama:</div>
+        <div class="fill-line"></div>
+      </div>
+    </div>
+
+    <div class="fill-block">
+      <span class="fill-num">02</span>
+      <div class="fill-content">
+        <div class="fill-text">📊 La window function que accede al valor de la <strong>fila anterior</strong> según un orden definido se llama:</div>
+        <div class="fill-line"></div>
+      </div>
+    </div>
+
+    <div class="fill-block">
+      <span class="fill-num">03</span>
+      <div class="fill-content">
+        <div class="fill-text">⚡ En PostgreSQL, la variable especial que representa el estado de la fila <strong>antes</strong> de un UPDATE en un trigger se llama:</div>
+        <div class="fill-line"></div>
+      </div>
+    </div>
+
+    <div class="fill-block">
+      <span class="fill-num">04</span>
+      <div class="fill-content">
+        <div class="fill-text">💾 El comando que deshace parcialmente una transacción <strong>hasta un punto marcado</strong>, sin cerrar la transacción, es:</div>
+        <div class="fill-line"></div>
+      </div>
+    </div>
+
+    <div class="fill-block">
+      <span class="fill-num">05</span>
+      <div class="fill-content">
+        <div class="fill-text">🔒 La propiedad ACID que garantiza que dos transacciones concurrentes <strong>no se ven entre sí</strong> hasta que hacen COMMIT se llama:</div>
+        <div class="fill-line"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SECTION C -->
+  <div class="section">
+    <div class="section-header">
+      <span class="section-tag">SECCIÓN C</span>
+      <span class="section-title">🧠 Desarrollo</span>
+      <span class="pts-badge">30 pts</span>
+    </div>
+
+    <!-- Prob 1 -->
+    <div class="dev-block">
+      <div class="dev-stem">
+        <span class="dev-num">P1</span>
+        <div>
+          <strong>Normalización 🏗️</strong> — Dado el siguiente esquema sin normalizar:
+          <div style="margin: 8px 0 4px 0;">
+            <span class="schema-pill">📌 <strong>turno_id</strong> (PK)</span>
+            <span class="schema-pill">paciente_id</span>
+            <span class="schema-pill">paciente_nombre</span>
+            <span class="schema-pill">paciente_tel</span>
+            <span class="schema-pill">medico_id</span>
+            <span class="schema-pill">medico_nombre</span>
+            <span class="schema-pill">especialidad</span>
+            <span class="schema-pill">fecha</span>
+            <span class="schema-pill">hora</span>
+            <span class="schema-pill">consultorio</span>
+            <span class="schema-pill">duracion_min</span>
+            <span class="schema-pill">estado</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="sub-q">a) <span>¿En qué FN está? Justificá en una oración.</span> <span class="sub-pts">4 pts</span></div>
+      <div class="answer-lines">
+        <div class="answer-line"></div>
+        <div class="answer-line"></div>
+      </div>
+
+      <div class="sub-q">b) <span>¿Qué anomalía concreta aparece si se borra el único turno de un paciente?</span> <span class="sub-pts">4 pts</span></div>
+      <div class="answer-lines">
+        <div class="answer-line"></div>
+        <div class="answer-line"></div>
+      </div>
+
+      <div class="sub-q">c) <span>Descomponé hasta 3FN. Listá tablas con atributos, marcá PK y FK.</span> <span class="sub-pts">7 pts</span></div>
+      <div class="answer-lines">
+        <div class="answer-line"></div><div class="answer-line"></div><div class="answer-line"></div>
+        <div class="answer-line"></div><div class="answer-line"></div><div class="answer-line"></div>
+      </div>
+    </div>
+
+    <!-- Prob 2 -->
+    <div class="dev-block">
+      <div class="dev-stem">
+        <span class="dev-num">P2</span>
+        <div>
+          <strong>SQL — Streaming de música 🎵</strong> — Trabajás con:
+          <div style="margin: 8px 0 4px 0;">
+            <span class="schema-pill">artistas (<strong>artista_id</strong>, nombre, pais, genero)</span>
+            <span class="schema-pill">canciones (<strong>cancion_id</strong>, artista_id, titulo, duracion_seg, anio)</span>
+            <span class="schema-pill">escuchas (<strong>escucha_id</strong>, cancion_id, usuario_id, fecha)</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="sub-q">a) <span>Listá artistas con al menos una canción con +100 escuchas. Mostrar nombre, pais, total_escuchas. Ordenar DESC.</span> <span class="sub-pts">7 pts</span></div>
+      <div class="answer-lines">
+        <div class="answer-line"></div><div class="answer-line"></div><div class="answer-line"></div>
+        <div class="answer-line"></div><div class="answer-line"></div><div class="answer-line"></div>
+        <div class="answer-line"></div><div class="answer-line"></div>
+      </div>
+
+      <div class="sub-q">b) <span>Usando una CTE, encontrá el artista con más escuchas por género. Columnas: genero, nombre, total_escuchas.</span> <span class="sub-pts">8 pts</span></div>
+      <div class="answer-lines">
+        <div class="answer-line"></div><div class="answer-line"></div><div class="answer-line"></div>
+        <div class="answer-line"></div><div class="answer-line"></div><div class="answer-line"></div>
+        <div class="answer-line"></div><div class="answer-line"></div>
+      </div>
+    </div>
+
+  </div>
+
+  <div style="padding: 0 1.5rem;">
+    <div style="border-top: 2px dashed var(--color-border-secondary); padding-top: 1rem; text-align: center; font-family: 'Space Mono', monospace; font-size: 11px; color: var(--color-text-secondary);">
+      ✨ Bases de Datos II &nbsp;·&nbsp; Instituto Integral Católico &nbsp;·&nbsp; Fin del instrumento
+    </div>
+  </div>
+</body-wrap>
+
+<script>
+  function pick(el) {
+    const grid = el.closest('.options-grid');
+    grid.querySelectorAll('.option').forEach(o => o.classList.remove('selected'));
+    el.classList.add('selected');
+    el.querySelector('.checkbox').textContent = '✓';
+    grid.querySelectorAll('.option:not(.selected) .checkbox').forEach(c => c.textContent = '');
+  }
+</script>

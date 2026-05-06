@@ -1,8 +1,10 @@
 import {
   questions,
   hardQuestions,
+  bd2SectionB,
   type Question,
   type Difficulty,
+  type FillQuestion,
 } from "@/app/data/questions";
 
 // Re-export for consumers that import from this module
@@ -19,6 +21,8 @@ export type Quiz = {
   topics: string[];
   normal: Question[];
   hard: Question[];
+  fillQuestions?: FillQuestion[]; // Section B
+  hasFill?: boolean; // true if this quiz has a fill section
 };
 
 // ---------------------------------------------------------------------------
@@ -1591,12 +1595,169 @@ const baseDatosAvanzadoQuiz: Quiz = {
 // Exported collection
 // ---------------------------------------------------------------------------
 
+// ---------------------------------------------------------------------------
+// Quiz 4 — Bases de Datos II
+// ---------------------------------------------------------------------------
+
+const bd2Quiz: Quiz = {
+  id: "bd2",
+  subject: "Bases de Datos II",
+  title: "Parcial · Bases de Datos II",
+  subtitle: "Sección A: multiple choice · Sección B: completá el término",
+  emoji: "🗄️",
+  color: "var(--azul-claro)",
+  accentColor: "var(--violeta)",
+  topics: [
+    "Normalización",
+    "Dependencias funcionales",
+    "Triggers",
+    "Window Functions",
+    "Transacciones ACID",
+    "Stored Procedures",
+    "Claves y constraints",
+  ],
+  normal: [
+    {
+      category: "Normalización",
+      question:
+        "Una tabla tiene la clave compuesta (pedido_id, producto_id). El atributo cliente_nombre depende solo de pedido_id. ¿Qué tipo de dependencia es?",
+      options: [
+        "Transitiva",
+        "Parcial — la clave completa no es necesaria",
+        "Multivaluada",
+        "Trivial",
+      ],
+      correct: 1,
+      explanation:
+        "Es una dependencia PARCIAL: cliente_nombre depende solo de una parte de la clave compuesta (pedido_id), no de la clave completa. Esto viola la 2FN.",
+    },
+    {
+      category: "Normalización",
+      question:
+        "Separar cliente_ciudad a una tabla CLIENTES para eliminar que cliente_id → cliente_ciudad exista en FACTURAS es llevar el esquema a...",
+      options: ["1FN", "2FN", "3FN — elimina dependencia transitiva", "BCNF"],
+      correct: 2,
+      explanation:
+        "Es 3FN: se elimina la dependencia transitiva (cliente_ciudad depende de cliente_id que no es clave de FACTURAS). La 3FN exige que todo atributo dependa directamente de la clave primaria.",
+    },
+    {
+      category: "Anomalías",
+      question: "¿Cuál de estas describe una anomalía de INSERCIÓN?",
+      options: [
+        "Actualizar el nombre de una ciudad obliga a modificar 800 filas",
+        "Al borrar el último pedido de un cliente se pierde su teléfono",
+        "No se puede registrar un nuevo proveedor sin ingresar al menos un producto",
+        "Un NOT NULL impide insertar una fila con datos incompletos",
+      ],
+      correct: 2,
+      explanation:
+        "La anomalía de inserción ocurre cuando no podés agregar datos sin depender de otros datos que no corresponden. No poder registrar un proveedor sin un producto es el ejemplo clásico.",
+    },
+    {
+      category: "Integridad referencial",
+      question: "ON DELETE CASCADE en una FK significa que...",
+      options: [
+        "No se puede eliminar el padre si tiene hijos",
+        "Al eliminar el padre, los hijos quedan con NULL",
+        "Al eliminar el padre, los hijos se eliminan automáticamente",
+        "Los hijos heredan el valor por defecto",
+      ],
+      correct: 2,
+      explanation:
+        "CASCADE propaga la eliminación: si borrás el registro padre, todos los registros hijos con esa FK también se eliminan automáticamente.",
+    },
+    {
+      category: "Constraints",
+      question: "¿Cuál es la diferencia principal entre UNIQUE y PRIMARY KEY?",
+      options: [
+        "PRIMARY KEY acepta NULLs; UNIQUE no",
+        "UNIQUE acepta NULLs; PRIMARY KEY no admite NULLs y es única por tabla",
+        "Son idénticos, solo difieren en nombre",
+        "PRIMARY KEY permite duplicados en tablas grandes",
+      ],
+      correct: 1,
+      explanation:
+        "UNIQUE garantiza unicidad pero permite NULLs (múltiples filas pueden tener NULL). PRIMARY KEY = UNIQUE + NOT NULL, y solo puede haber una por tabla.",
+    },
+    {
+      category: "Subconsultas",
+      question: "EXISTS (SELECT 1 FROM ...) devuelve...",
+      options: [
+        "El primer valor de la subconsulta",
+        "La cantidad de filas que retorna la subconsulta",
+        "TRUE si la subconsulta devuelve al menos 1 fila, FALSE si no",
+        "TRUE solo si devuelve exactamente 1 fila",
+      ],
+      correct: 2,
+      explanation:
+        "EXISTS evalúa si la subconsulta retorna al menos una fila. No importa el valor — por eso se usa SELECT 1 para eficiencia. Retorna TRUE o FALSE.",
+    },
+    {
+      category: "Window Functions",
+      question: "¿Para qué sirve una window function en SQL?",
+      options: [
+        "Filtra filas antes del GROUP BY",
+        "Calcula un valor por fila usando un conjunto de filas relacionadas, sin eliminar filas del resultado",
+        "Ejecuta una función sobre cada tabla en una ventana de tiempo",
+        "Reemplaza JOINs cuando se consultan varias tablas",
+      ],
+      correct: 1,
+      explanation:
+        "Las window functions calculan sobre una 'ventana' de filas relacionadas sin colapsar el resultado como GROUP BY. Permiten rankings, acumulados, promedios móviles, etc.",
+    },
+    {
+      category: "Triggers",
+      question: "Un trigger BEFORE UPDATE FOR EACH ROW puede...",
+      options: [
+        "Modificar los valores de NEW antes de que se escriban en la tabla",
+        "Solo leer NEW y OLD, no modificarlos",
+        "Cancelar el UPDATE devolviendo OLD en lugar de NEW",
+        "Hacer COMMIT dentro del trigger",
+      ],
+      correct: 0,
+      explanation:
+        "En un BEFORE trigger podés modificar NEW antes de que se persista. Es útil para validaciones y transformaciones automáticas de datos.",
+    },
+    {
+      category: "Stored Procedures",
+      question:
+        "Un stored procedure en PostgreSQL se diferencia de una function en que...",
+      options: [
+        "El procedure es más rápido porque no retorna valores",
+        "El procedure puede ejecutar COMMIT y ROLLBACK; la function no puede",
+        "La function solo puede usarse con triggers",
+        "No hay diferencia práctica en PostgreSQL moderno",
+      ],
+      correct: 1,
+      explanation:
+        "La diferencia clave: los stored procedures pueden controlar transacciones (COMMIT, ROLLBACK). Las functions corren dentro de la transacción del llamador y no pueden emitir COMMIT/ROLLBACK.",
+    },
+    {
+      category: "ACID",
+      question: "La propiedad ACID de Consistencia garantiza que...",
+      options: [
+        "Las transacciones se ejecutan sin interferencia entre sí",
+        "Los cambios confirmados sobreviven a fallos de hardware",
+        "La DB pasa de un estado válido a otro estado válido — los constraints nunca quedan violados",
+        "Todas las operaciones ocurren o ninguna ocurre",
+      ],
+      correct: 2,
+      explanation:
+        "Consistencia: la DB siempre pasa de un estado válido a otro. Ninguna transacción puede dejar la base en un estado que viole las reglas de integridad definidas.",
+    },
+  ],
+  hard: [],
+  fillQuestions: bd2SectionB,
+  hasFill: true,
+};
+
 export const quizzes: Quiz[] = [
   ecosistemasQuiz,
   techBasicoQuiz,
   techAvanzadoQuiz,
   baseDatosNormalQuiz,
   baseDatosAvanzadoQuiz,
+  bd2Quiz,
 ];
 
 // ---------------------------------------------------------------------------
