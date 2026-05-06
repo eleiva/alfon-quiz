@@ -409,18 +409,19 @@ export default function TriviaGame() {
     return (
       <div className="trivia-container">
         <header className="trivia-header">
-          <img
-            src="/logo.png"
-            alt="logo"
-            style={{ width: 56, height: 56, marginBottom: 8 }}
-          />
-          <h1 className="trivia-h1">
-            Trivia{" "}
-            <span style={{ color: "var(--verde-claro)" }}>Educativa</span>
-          </h1>
-          <p style={{ color: "var(--gris)", fontSize: 14, fontWeight: 300 }}>
-            Varios temas · Normal o Difícil
-          </p>
+          <div
+            style={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              gap: 14,
+            }}
+          >
+            <img src="/logo.png" alt="logo" style={{ width: 52, height: 52 }} />
+            <h1 className="trivia-h1" style={{ margin: 0 }}>
+              Trivias
+            </h1>
+          </div>
         </header>
 
         <div
