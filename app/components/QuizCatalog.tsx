@@ -273,29 +273,26 @@ export default function QuizCatalog({
             gap: 8,
           }}
         >
-          <div style={{ display: "flex", alignItems: "center", gap: 14 }}>
-            <img
-              src="/logo.png"
-              alt="logo"
-              style={{ width: 44, height: 44, flexShrink: 0 }}
-            />
-            <div>
-              <div className="trivia-badge">🎮 Elige tu trivia</div>
-              <h1 className="trivia-h1">
-                {playerEmoji}{" "}
-                <span style={{ color: "var(--verde-claro)" }}>
-                  {playerName.trim() || "Jugador"}
-                </span>
-                , elegí una trivia
-              </h1>
-            </div>
+          <div
+            style={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              gap: 14,
+              flex: 1,
+            }}
+          >
+            <img src="/logo.png" alt="logo" style={{ width: 44, height: 44 }} />
+            <h1 className="trivia-h1" style={{ margin: 0 }}>
+              Trivias
+            </h1>
           </div>
           <button
             className="back-btn"
             style={{ flexShrink: 0 }}
             onClick={onChangeName}
           >
-            ← Cambiar nombre
+            ← {playerName.trim() || "Cambiar nombre"}
           </button>
         </div>
       </header>
