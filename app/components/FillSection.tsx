@@ -22,13 +22,35 @@ type Result = {
 };
 
 function checkAnswer(input: string, q: FillQuestion): boolean {
-  const normalized = input.trim().toLowerCase().replace(/[()]/g, "");
-  return q.acceptedAnswers.some(
-    (a) =>
-      normalized === a ||
-      normalized.includes(a) ||
-      (a.includes(normalized) && normalized.length > 2),
-  );
+  const normalize = (s: string) =>
+    s
+      .trim()
+      .toLowerCase()
+      .replace(/[()]/g, "")
+      .normalize("NFD")
+      .replace(/[\u0300-\u036f]/g, ""); // strip accents
+
+  const normalized = normalize(input);
+
+  return q.acceptedAnswers.some((a) => {
+    const an = normalize(a);
+    // 1. Exact match (accent-insensitive)
+    if (normalized === an) return true;
+    // 2. Input contains the accepted answer AS A WHOLE WORD
+    //    e.g. "anomalia de borrado" contains "borrado" ✓
+    //    but "borradoo" does NOT equal "borrado"
+    const wordBoundaryRe = new RegExp(`(^|\\s)${an}(\\s|$)`);
+    if (wordBoundaryRe.test(normalized)) return true;
+    // 3. Accepted answer contains the full input (user wrote a short form)
+    //    Only when input length >= 70% of accepted answer length (avoids partial typos)
+    if (
+      an.includes(normalized) &&
+      normalized.length >= Math.ceil(an.length * 0.7) &&
+      normalized.length >= 3
+    )
+      return true;
+    return false;
+  });
 }
 
 export default function FillSection({
