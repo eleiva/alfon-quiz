@@ -3,6 +3,8 @@
 import { useState, useEffect, useRef } from "react";
 import { type FillQuestion } from "@/app/data/questions";
 import { useSound } from "@/app/hooks/useSound";
+import SqlBlock, { parseQuestionSegments } from "@/app/components/SqlBlock";
+import SchemaTable from "@/app/components/SchemaTable";
 
 type Props = {
   questions: FillQuestion[];
@@ -409,7 +411,27 @@ export default function FillSection({
         <div className="q-num">
           Pregunta {current + 1} de {total}
         </div>
-        <div className="question-text">{q.question}</div>
+        {/* Question text — splits plain text and code */}
+        <div style={{ marginBottom: 8 }}>
+          {parseQuestionSegments(q.question).map((seg, si) =>
+            seg.type === "code" ? (
+              <SqlBlock key={si} code={seg.content} />
+            ) : (
+              <p key={si} className="question-text" style={{ marginBottom: 4 }}>
+                {seg.content}
+              </p>
+            ),
+          )}
+        </div>
+
+        {/* Schema table if present */}
+        {q.diagram && (
+          <SchemaTable
+            tables={q.diagram}
+            relations={q.diagramRelations}
+            caption={q.diagramCaption}
+          />
+        )}
 
         {/* Text input */}
         <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>

@@ -14,6 +14,7 @@ import { type LeaderboardEntry } from "@/app/components/QuizCatalog";
 import PersonalityTest from "@/app/components/PersonalityTest";
 import { shareResultWhatsApp } from "@/app/components/PersonalityTest";
 import SqlBlock, { parseQuestionSegments } from "@/app/components/SqlBlock";
+import SchemaTable from "@/app/components/SchemaTable";
 
 export type { LeaderboardEntry };
 
@@ -408,7 +409,11 @@ export default function TriviaGame() {
     return (
       <div className="trivia-container">
         <header className="trivia-header">
-          <div className="trivia-badge">🎮 Trivias</div>
+          <img
+            src="/logo.png"
+            alt="logo"
+            style={{ width: 56, height: 56, marginBottom: 8 }}
+          />
           <h1 className="trivia-h1">
             Trivia{" "}
             <span style={{ color: "var(--verde-claro)" }}>Educativa</span>
@@ -1010,6 +1015,15 @@ export default function TriviaGame() {
         <div className="q-num">
           Pregunta {current + 1} de {total}
         </div>
+        {/* Schema table diagram if present */}
+        {q.diagram && (
+          <SchemaTable
+            tables={q.diagram}
+            relations={q.diagramRelations}
+            caption={q.diagramCaption}
+          />
+        )}
+
         {/* Question text — plain segments + SQL code blocks */}
         <div style={{ marginBottom: 20 }}>
           {parseQuestionSegments(q.question).map((seg, si) =>

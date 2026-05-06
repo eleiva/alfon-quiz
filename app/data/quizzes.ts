@@ -1833,6 +1833,50 @@ const bd2Quiz: Quiz = {
     },
     // Q16
     {
+      category: "Anomalías",
+      question:
+        "Se borra el único empleado del departamento D04. Como resultado, se pierde para siempre el nombre y la ciudad de ese departamento.\n\n¿Cómo se llama este tipo de anomalía?",
+      options: [
+        "Anomalía de actualización",
+        "Anomalía de borrado",
+        "Anomalía de inserción",
+        "Inconsistencia referencial",
+      ],
+      correct: 1,
+      explanation:
+        "Es una anomalía de BORRADO: al eliminar el único empleado del departamento, se pierden sus datos (nombre, ciudad) que no deberían estar en la tabla EMPLEADO. La solución es separar DEPARTAMENTOS en su propia tabla.",
+    },
+    // Q17 — 3FN decomposition
+    {
+      category: "Normalización",
+      question:
+        "La tabla EMPLEADO (empleado_id PK, nombre, departamento_id, departamento_nombre, departamento_ciudad) está en 2FN pero viola 3FN.\n\nEl diagrama muestra su estado actual. ¿Cuántas tablas hacen falta para llevarla a 3FN?",
+      diagram: [
+        {
+          name: "EMPLEADO",
+          columns: [
+            { type: "int", name: "empleado_id", constraints: ["PK"] },
+            { type: "string", name: "nombre", constraints: [] },
+            { type: "int", name: "departamento_id", constraints: [] },
+            { type: "string", name: "departamento_nombre", constraints: [] },
+            { type: "string", name: "departamento_ciudad", constraints: [] },
+          ],
+        },
+      ],
+      diagramCaption:
+        "Estado actual (2FN) — ¿cuántas tablas hacen falta para llegar a 3FN?",
+      options: [
+        "1 tabla — solo hay que agregar un índice en departamento_id",
+        "2 tablas — EMPLEADOS y DEPARTAMENTOS, con FK de empleados a departamentos",
+        "3 tablas — EMPLEADOS, DEPARTAMENTOS y CIUDADES",
+        "4 tablas — una por cada atributo del departamento",
+      ],
+      correct: 1,
+      explanation:
+        "En 3FN cada atributo no-clave debe depender directamente de la PK. departamento_nombre y departamento_ciudad dependen de departamento_id (no de empleado_id) — eso es una dependencia transitiva. La solución son 2 tablas: EMPLEADOS(empleado_id PK, nombre, departamento_id FK) y DEPARTAMENTOS(departamento_id PK, departamento_nombre, departamento_ciudad).",
+    },
+    // Q18 — SQL Streaming
+    {
       category: "SQL — Streaming",
       question:
         "Tenés estas tablas:\nartistas(artista_id, nombre, pais, genero)\ncanciones(cancion_id, artista_id, titulo, duracion_seg, anio)\nescuchas(escucha_id, cancion_id, usuario_id, fecha)\n\nEscribí una consulta que liste los artistas con al menos una canción que tenga más de 100 escuchas. Mostrar nombre, pais y total_escuchas. Ordenar por total_escuchas DESC.\n\n¿Cuál de estas queries es correcta?",

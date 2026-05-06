@@ -1,9 +1,15 @@
+import type { TableDef, Relation } from "@/app/components/SchemaTable";
+export type { TableDef, Relation };
+
 export type Question = {
   category: string;
   question: string;
   options: string[];
   correct: number;
   explanation: string;
+  diagram?: TableDef[]; // optional schema table(s) shown above the question
+  diagramCaption?: string;
+  diagramRelations?: Relation[];
 };
 
 export type Difficulty = "normal" | "hard";
@@ -15,6 +21,9 @@ export type FillQuestion = {
   answer: string; // canonical correct answer
   acceptedAnswers: string[]; // all accepted variants (lowercase, trimmed)
   hint: string; // shown after answering
+  diagram?: TableDef[];
+  diagramCaption?: string;
+  diagramRelations?: Relation[];
 };
 
 export const bd2SectionB: FillQuestion[] = [
@@ -88,37 +97,20 @@ export const bd2SectionB: FillQuestion[] = [
     answer: "2FN",
     acceptedAnswers: ["2fn", "segunda forma normal", "2° fn", "segunda fn"],
     hint: "Está en 2FN: cumple 1FN (datos atómicos, PK simple), y no hay dependencias parciales porque la PK es simple. Pero departamento_nombre depende transitivamente de empleado_id a través de departamento_id — eso viola la 3FN.",
-  },
-  {
-    id: 7,
-    category: "Anomalías",
-    question:
-      "🗑️ Se borra el único empleado del departamento D04. Como resultado, se pierde para siempre el nombre y la ciudad de ese departamento.\n\n¿Cómo se llama este tipo de anomalía?\n· A — Anomalía de actualización\n· B — Anomalía de borrado\n· C — Anomalía de inserción\n· D — Inconsistencia referencial\n\n💡 Pista: la operación que disparó el problema fue un DELETE. Respondé la letra (B) o la palabra exacta: borrado (7 letras).",
-    answer: "B",
-    acceptedAnswers: [
-      "b",
-      "borrado",
-      "anomalia de borrado",
-      "anomalía de borrado",
-      "anomalia borrado",
+    diagram: [
+      {
+        name: "EMPLEADO",
+        columns: [
+          { type: "int", name: "empleado_id", constraints: ["PK"] },
+          { type: "string", name: "nombre", constraints: [] },
+          { type: "int", name: "departamento_id", constraints: [] },
+          { type: "string", name: "departamento_nombre", constraints: [] },
+          { type: "string", name: "departamento_ciudad", constraints: [] },
+        ],
+      },
     ],
-    hint: "Anomalía de BORRADO: al eliminar el único empleado del departamento, se pierden los datos del departamento que no deberían estar en la tabla EMPLEADO. Solución: mover los datos del departamento a una tabla DEPARTAMENTOS separada.",
-  },
-  {
-    id: 8,
-    category: "Normalización",
-    question:
-      "📐 Para llevar EMPLEADO a 3FN hay que separar las dependencias transitivas en su propia tabla.\n\n¿Cuántas tablas resultan y cómo se llaman? Escribí los nombres separados por comas.\n💡 Pista: una tabla para los empleados y otra para los datos del departamento.",
-    answer: "EMPLEADOS, DEPARTAMENTOS",
-    acceptedAnswers: [
-      "empleados, departamentos",
-      "departamentos, empleados",
-      "empleado, departamento",
-      "departamento, empleado",
-      "empleados departamentos",
-      "departamentos empleados",
-    ],
-    hint: "2 tablas: EMPLEADOS(empleado_id PK, nombre, departamento_id FK) · DEPARTAMENTOS(departamento_id PK, departamento_nombre, departamento_ciudad). Así cada atributo depende directamente de su PK y se eliminan las dependencias transitivas.",
+    diagramCaption:
+      "La tabla tiene dependencias transitivas — departamento_nombre depende de departamento_id, no de la PK",
   },
 ];
 

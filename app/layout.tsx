@@ -18,6 +18,11 @@ export const metadata: Metadata = {
   title: "Trivias Educativas",
   description:
     "Trivias de Ciencias Naturales y Tecnología · Test de personalidad · Herramientas docentes",
+  icons: {
+    icon: "/logo.png",
+    shortcut: "/logo.png",
+    apple: "/logo.png",
+  },
 };
 
 export default function RootLayout({
