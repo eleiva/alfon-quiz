@@ -13,6 +13,7 @@ import FillSection from "@/app/components/FillSection";
 import { type LeaderboardEntry } from "@/app/components/QuizCatalog";
 import PersonalityTest from "@/app/components/PersonalityTest";
 import { shareResultWhatsApp } from "@/app/components/PersonalityTest";
+import SqlBlock, { parseQuestionSegments } from "@/app/components/SqlBlock";
 
 export type { LeaderboardEntry };
 
@@ -1009,8 +1010,17 @@ export default function TriviaGame() {
         <div className="q-num">
           Pregunta {current + 1} de {total}
         </div>
-        <div className="question-text" style={{ whiteSpace: "pre-wrap" }}>
-          {q.question}
+        {/* Question text — plain segments + SQL code blocks */}
+        <div style={{ marginBottom: 20 }}>
+          {parseQuestionSegments(q.question).map((seg, si) =>
+            seg.type === "code" ? (
+              <SqlBlock key={si} code={seg.content} />
+            ) : (
+              <p key={si} className="question-text" style={{ marginBottom: 6 }}>
+                {seg.content}
+              </p>
+            ),
+          )}
         </div>
 
         {/* Options */}
@@ -1032,7 +1042,9 @@ export default function TriviaGame() {
             // Detect SQL code blocks (contain newlines + SQL keywords)
             const isSqlBlock =
               opt.includes("\n") &&
-              /SELECT|FROM|WHERE|JOIN|WITH|GROUP|HAVING|ORDER/i.test(opt);
+              /SELECT|FROM|WHERE|JOIN|WITH|GROUP|HAVING|ORDER|BEGIN|CREATE|IF|END|ROLLBACK|COMMIT|UPDATE|INSERT/i.test(
+                opt,
+              );
 
             return (
               <button
@@ -1040,30 +1052,22 @@ export default function TriviaGame() {
                 className={`option-btn${extraClass ? ` ${extraClass}` : ""}`}
                 disabled={answered}
                 onClick={() => selectOption(i)}
-                style={isSqlBlock ? { alignItems: "flex-start" } : undefined}
+                style={
+                  isSqlBlock
+                    ? { alignItems: "flex-start", paddingBottom: 6 }
+                    : undefined
+                }
               >
                 <span
                   className={`option-letter${letterExtra ? ` ${letterExtra}` : ""}`}
-                  style={isSqlBlock ? { marginTop: 2 } : undefined}
+                  style={isSqlBlock ? { marginTop: 10 } : undefined}
                 >
                   {LETTERS[i]}
                 </span>
                 {isSqlBlock ? (
-                  <pre
-                    style={{
-                      margin: 0,
-                      fontFamily: "'Space Mono', 'Courier New', monospace",
-                      fontSize: 11,
-                      lineHeight: 1.6,
-                      whiteSpace: "pre-wrap",
-                      wordBreak: "break-word",
-                      textAlign: "left",
-                      color: "inherit",
-                      flex: 1,
-                    }}
-                  >
-                    {opt}
-                  </pre>
+                  <div style={{ flex: 1, minWidth: 0 }}>
+                    <SqlBlock code={opt} style={{ margin: "4px 0 0" }} />
+                  </div>
                 ) : (
                   opt
                 )}
